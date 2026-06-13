@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Moving Out Web Visualization</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0f1320;
+        --panel: #171c2d;
+        --text: #eff3ff;
+        --muted: #b7c0dd;
+        --accent: #4fc3f7;
+        --border: #2a3558;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #0f1320;
+        color: var(--text);
+      }
+      main {
+        width: min(760px, calc(100vw - 32px));
+        display: grid;
+        gap: 14px;
+      }
+      h1 {
+        margin: 0 0 4px;
+        font-size: 1.35rem;
+      }
+      p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+      nav {
+        display: grid;
+        gap: 10px;
+        margin-top: 8px;
+      }
+      a {
+        display: block;
+        padding: 14px 16px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--text);
+        text-decoration: none;
+      }
+      a:hover {
+        border-color: var(--accent);
+      }
+      span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Moving Out Web Visualization</h1>
+        <p>Select an annotation interface.</p>
+      </header>
+      <nav>
+        <a href="./conversation_annotation/">
+          Conversation Annotation
+          <span>Pipeline viewer and conversation episode editor.</span>
+        </a>
+        <a href="./dependency_parsing/">
+          Dependency Parsing
+          <span>Timeline graph for action and conversation dependencies.</span>
+        </a>
+      </nav>
+    </main>
+    <script>
+      (() => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("server") === "1") sessionStorage.removeItem("WEB_VIZ_STATIC_MODE");
+        const requested = params.get("static") === "1" || window.location.hostname.endsWith("github.io");
+        if (requested) sessionStorage.setItem("WEB_VIZ_STATIC_MODE", "1");
+        const enabled = requested || sessionStorage.getItem("WEB_VIZ_STATIC_MODE") === "1";
+        window.WEB_VIZ_STATIC_CONFIG = {
+          enabled,
+          dataIndexUrl: "./sample_data/index.json",
+          allowEditing: true,
+          saveMode: "download",
+        };
+        if (!enabled) return;
+        document.querySelectorAll('a[href^="./conversation_annotation/"], a[href^="./dependency_parsing/"]').forEach((link) => {
+          const url = new URL(link.getAttribute("href"), window.location.href);
+          url.searchParams.set("static", "1");
+          link.href = url.pathname + url.search;
+        });
+      })();
+    </script>
+  </body>
+</html>

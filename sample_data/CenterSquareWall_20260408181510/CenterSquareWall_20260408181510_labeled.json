@@ -1,0 +1,1390 @@
+{
+  "metadata": {
+    "schema_version": 3,
+    "source": "CenterSquareWall_20260408181510",
+    "trajectory_path": "CenterSquareWall_20260408181510.json",
+    "audio_path": "CenterSquareWall_20260408181510.wav",
+    "duration_s": 46.33,
+    "total_steps": 462,
+    "speakers": {
+      "Speaker 1": "blue_agent",
+      "Speaker 2": "red_agent"
+    },
+    "asr_model": "whisper-large-v3",
+    "response_merge_window_s": 3.0,
+    "default_action_window_tail_s": 5.0,
+    "dependency_relation_label_sets": {
+      "action_action": [
+        "trigger",
+        "follow",
+        "others"
+      ],
+      "action_conversation": [
+        "trigger",
+        "follow",
+        "others"
+      ],
+      "action_speech": [
+        "trigger",
+        "follow",
+        "others"
+      ],
+      "speech_speech": [
+        "revise_plan",
+        "confirm",
+        "refuse",
+        "others"
+      ],
+      "conversation_conversation": [
+        "response",
+        "confirm",
+        "answer",
+        "clarify",
+        "revise_plan",
+        "unclear"
+      ]
+    },
+    "action_episodes_source": "manual"
+  },
+  "conversations": [
+    {
+      "conversation_id": "conv_000",
+      "time_range": [
+        0.98,
+        4.44
+      ],
+      "action_window": [
+        0.98,
+        9.44
+      ],
+      "follow_label": "follow",
+      "collapsed": false,
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "sentence_key": "0.98_2.54_red_agent_Small first, maybe?",
+          "original_sentence_key": "0.98_2.54_red_agent_Small first, maybe?",
+          "speaker": "red_agent",
+          "text": "Small first, maybe?",
+          "communication_category": "confirmation",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "suggest_plan",
+          "success": "unknown",
+          "time_range": [
+            0.98,
+            2.54
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_000",
+          "speech_id": "0.98_2.54_red_agent_Small first, maybe?"
+        },
+        {
+          "sentence_index": 1,
+          "sentence_key": "3.88_4.44_blue_agent_Yeah.",
+          "original_sentence_key": "3.88_4.44_blue_agent_Yeah.",
+          "speaker": "blue_agent",
+          "text": "Yeah.",
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "success": "unknown",
+          "time_range": [
+            3.88,
+            4.44
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_000",
+          "speech_id": "3.88_4.44_blue_agent_Yeah."
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv_001",
+      "time_range": [
+        6.48,
+        10.44
+      ],
+      "action_window": [
+        15.0,
+        20.0
+      ],
+      "follow_label": "follow",
+      "collapsed": false,
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "sentence_key": "6.48_8.26_blue_agent_And then we go from both sides",
+          "original_sentence_key": "6.48_8.26_blue_agent_And then we go from both sides",
+          "speaker": "blue_agent",
+          "text": "And then we go from both sides.",
+          "communication_category": "confirmation",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "suggest_plan",
+          "success": "unknown",
+          "time_range": [
+            6.48,
+            8.26
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_001",
+          "speech_id": "6.48_8.26_blue_agent_And then we go from both sides"
+        },
+        {
+          "sentence_index": 1,
+          "sentence_key": "9.88_10.44_red_agent_Yeah.",
+          "original_sentence_key": "9.88_10.44_red_agent_Yeah.",
+          "speaker": "red_agent",
+          "text": "Yeah.",
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "success": "unknown",
+          "time_range": [
+            9.88,
+            10.44
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_001",
+          "speech_id": "9.88_10.44_red_agent_Yeah."
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv_002",
+      "time_range": [
+        10.44,
+        14.28
+      ],
+      "action_window": [
+        10.44,
+        22.14
+      ],
+      "follow_label": "follow",
+      "collapsed": false,
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "sentence_key": "10.44_11.27_blue_agent_Can you?",
+          "original_sentence_key": "10.44_11.27_blue_agent_Can you?",
+          "speaker": "blue_agent",
+          "text": "Can you?",
+          "communication_category": "confirmation",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "ask_information",
+          "success": "unknown",
+          "time_range": [
+            10.44,
+            11.27
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_002",
+          "speech_id": "10.44_11.27_blue_agent_Can you?"
+        },
+        {
+          "sentence_index": 1,
+          "sentence_key": "11.27_14.28_red_agent_You just grab the bigger one.",
+          "original_sentence_key": "11.27_14.28_red_agent_You just grab the bigger one.",
+          "speaker": "red_agent",
+          "text": "You just grab the bigger one.",
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "suggest_plan",
+          "success": "unknown",
+          "time_range": [
+            11.27,
+            13.92
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_002",
+          "speech_id": "11.27_14.28_red_agent_You just grab the bigger one."
+        },
+        {
+          "sentence_index": 2,
+          "sentence_key": "13.92_14.28_blue_agent_Okay",
+          "original_sentence_key": "11.27_14.28_red_agent_You just grab the bigger one.",
+          "speaker": "blue_agent",
+          "text": "Okay",
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "suggest_plan",
+          "success": "unknown",
+          "time_range": [
+            13.92,
+            14.28
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_002",
+          "speech_id": "13.92_14.28_blue_agent_Okay_a_1779829162810"
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv_003",
+      "time_range": [
+        14.48,
+        17.14
+      ],
+      "action_window": [
+        10.44,
+        22.14
+      ],
+      "follow_label": "follow",
+      "collapsed": false,
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "sentence_key": "14.48_16.58_red_agent_I will just go from top.",
+          "original_sentence_key": "14.48_16.58_red_agent_I will just go from top.",
+          "speaker": "red_agent",
+          "text": "I will just go from top.",
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "success": "unknown",
+          "time_range": [
+            14.48,
+            16.58
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_003",
+          "speech_id": "14.48_16.58_red_agent_I will just go from top."
+        },
+        {
+          "sentence_index": 1,
+          "sentence_key": "16.86_17.14_blue_agent_Yes.",
+          "original_sentence_key": "16.86_17.14_blue_agent_Yes.",
+          "speaker": "blue_agent",
+          "text": "Yes.",
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "success": "unknown",
+          "time_range": [
+            16.86,
+            17.14
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_003",
+          "speech_id": "16.86_17.14_blue_agent_Yes."
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv_004",
+      "time_range": [
+        25.84,
+        29.36
+      ],
+      "action_window": [
+        25.84,
+        29.5
+      ],
+      "follow_label": "follow",
+      "collapsed": false,
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "sentence_key": "25.84_27.72_blue_agent_Turn a little more so it doesn",
+          "original_sentence_key": "25.84_27.72_blue_agent_Turn a little more so it doesn",
+          "speaker": "blue_agent",
+          "text": "Turn a little more so it doesn't get stuck.",
+          "communication_category": "confirmation",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "suggest_plan",
+          "success": "unknown",
+          "time_range": [
+            25.84,
+            27.72
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_004",
+          "speech_id": "25.84_27.72_blue_agent_Turn a little more so it doesn"
+        },
+        {
+          "sentence_index": 1,
+          "sentence_key": "27.72_29.36_blue_agent_You got it.",
+          "original_sentence_key": "27.72_29.36_blue_agent_You got it.",
+          "speaker": "red_agent",
+          "text": "You got it.",
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "success": "unknown",
+          "time_range": [
+            27.72,
+            29.36
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_004",
+          "speech_id": "27.72_29.36_blue_agent_You got it."
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv_005",
+      "time_range": [
+        36.38,
+        37.54
+      ],
+      "action_window": [
+        36.38,
+        39.0
+      ],
+      "follow_label": "follow",
+      "collapsed": false,
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "sentence_key": "36.38_37.54_red_agent_You need to turn again.",
+          "original_sentence_key": "36.38_37.54_red_agent_You need to turn again.",
+          "speaker": "red_agent",
+          "text": "You need to turn again.",
+          "communication_category": "Synchronize low-level plan",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "suggest_plan",
+          "success": "unknown",
+          "time_range": [
+            36.38,
+            37.54
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_005",
+          "speech_id": "36.38_37.54_red_agent_You need to turn again."
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv_006",
+      "time_range": [
+        40.96,
+        44.9
+      ],
+      "action_window": [
+        38.94,
+        49.9
+      ],
+      "follow_label": "unclear",
+      "collapsed": false,
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "sentence_key": "40.96_43.52_blue_agent_Just grab the bottom.",
+          "original_sentence_key": "40.96_43.52_blue_agent_Just grab the bottom.",
+          "speaker": "blue_agent",
+          "text": "Just grab the bottom.",
+          "communication_category": "Synchronize low-level plan",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "suggest_plan",
+          "success": "unknown",
+          "time_range": [
+            40.96,
+            43.52
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_006",
+          "speech_id": "40.96_43.52_blue_agent_Just grab the bottom."
+        },
+        {
+          "sentence_index": 1,
+          "sentence_key": "44.02_44.90_red_agent_Yeah.",
+          "original_sentence_key": "44.02_44.90_blue_agent_Yeah.",
+          "speaker": "red_agent",
+          "text": "Yeah.",
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "success": "unknown",
+          "time_range": [
+            44.02,
+            44.9
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_006",
+          "speech_id": "44.02_44.90_red_agent_Yeah."
+        }
+      ]
+    }
+  ],
+  "paragraphs": [
+    {
+      "time_range": [
+        0.98,
+        4.44
+      ],
+      "communication_category": "confirmation",
+      "follow_label": "follow",
+      "action_window": [
+        0.98,
+        9.44
+      ],
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "sentence_key": "0.98_2.54_red_agent_Small first, maybe?",
+          "original_sentence_key": "0.98_2.54_red_agent_Small first, maybe?",
+          "speaker": "red_agent",
+          "text": "Small first, maybe?",
+          "communication_category": "confirmation",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "suggest_plan",
+          "success": "unknown",
+          "time_range": [
+            0.98,
+            2.54
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_000",
+          "speech_id": "0.98_2.54_red_agent_Small first, maybe?"
+        },
+        {
+          "sentence_index": 1,
+          "sentence_key": "3.88_4.44_blue_agent_Yeah.",
+          "original_sentence_key": "3.88_4.44_blue_agent_Yeah.",
+          "speaker": "blue_agent",
+          "text": "Yeah.",
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "success": "unknown",
+          "time_range": [
+            3.88,
+            4.44
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_000",
+          "speech_id": "3.88_4.44_blue_agent_Yeah."
+        }
+      ]
+    },
+    {
+      "time_range": [
+        6.48,
+        10.44
+      ],
+      "communication_category": "confirmation",
+      "follow_label": "follow",
+      "action_window": [
+        15.0,
+        20.0
+      ],
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "sentence_key": "6.48_8.26_blue_agent_And then we go from both sides",
+          "original_sentence_key": "6.48_8.26_blue_agent_And then we go from both sides",
+          "speaker": "blue_agent",
+          "text": "And then we go from both sides.",
+          "communication_category": "confirmation",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "suggest_plan",
+          "success": "unknown",
+          "time_range": [
+            6.48,
+            8.26
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_001",
+          "speech_id": "6.48_8.26_blue_agent_And then we go from both sides"
+        },
+        {
+          "sentence_index": 1,
+          "sentence_key": "9.88_10.44_red_agent_Yeah.",
+          "original_sentence_key": "9.88_10.44_red_agent_Yeah.",
+          "speaker": "red_agent",
+          "text": "Yeah.",
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "success": "unknown",
+          "time_range": [
+            9.88,
+            10.44
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_001",
+          "speech_id": "9.88_10.44_red_agent_Yeah."
+        }
+      ]
+    },
+    {
+      "time_range": [
+        10.44,
+        14.28
+      ],
+      "communication_category": "confirmation",
+      "follow_label": "follow",
+      "action_window": [
+        10.44,
+        22.14
+      ],
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "sentence_key": "10.44_11.27_blue_agent_Can you?",
+          "original_sentence_key": "10.44_11.27_blue_agent_Can you?",
+          "speaker": "blue_agent",
+          "text": "Can you?",
+          "communication_category": "confirmation",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "ask_information",
+          "success": "unknown",
+          "time_range": [
+            10.44,
+            11.27
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_002",
+          "speech_id": "10.44_11.27_blue_agent_Can you?"
+        },
+        {
+          "sentence_index": 1,
+          "sentence_key": "11.27_14.28_red_agent_You just grab the bigger one.",
+          "original_sentence_key": "11.27_14.28_red_agent_You just grab the bigger one.",
+          "speaker": "red_agent",
+          "text": "You just grab the bigger one.",
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "suggest_plan",
+          "success": "unknown",
+          "time_range": [
+            11.27,
+            13.92
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_002",
+          "speech_id": "11.27_14.28_red_agent_You just grab the bigger one."
+        },
+        {
+          "sentence_index": 2,
+          "sentence_key": "13.92_14.28_blue_agent_Okay",
+          "original_sentence_key": "11.27_14.28_red_agent_You just grab the bigger one.",
+          "speaker": "blue_agent",
+          "text": "Okay",
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "suggest_plan",
+          "success": "unknown",
+          "time_range": [
+            13.92,
+            14.28
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_002",
+          "speech_id": "13.92_14.28_blue_agent_Okay_a_1779829162810"
+        }
+      ]
+    },
+    {
+      "time_range": [
+        14.48,
+        17.14
+      ],
+      "communication_category": "confirmation",
+      "follow_label": "follow",
+      "action_window": [
+        10.44,
+        22.14
+      ],
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "sentence_key": "14.48_16.58_red_agent_I will just go from top.",
+          "original_sentence_key": "14.48_16.58_red_agent_I will just go from top.",
+          "speaker": "red_agent",
+          "text": "I will just go from top.",
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "success": "unknown",
+          "time_range": [
+            14.48,
+            16.58
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_003",
+          "speech_id": "14.48_16.58_red_agent_I will just go from top."
+        },
+        {
+          "sentence_index": 1,
+          "sentence_key": "16.86_17.14_blue_agent_Yes.",
+          "original_sentence_key": "16.86_17.14_blue_agent_Yes.",
+          "speaker": "blue_agent",
+          "text": "Yes.",
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "success": "unknown",
+          "time_range": [
+            16.86,
+            17.14
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_003",
+          "speech_id": "16.86_17.14_blue_agent_Yes."
+        }
+      ]
+    },
+    {
+      "time_range": [
+        25.84,
+        29.36
+      ],
+      "communication_category": "confirmation",
+      "follow_label": "follow",
+      "action_window": [
+        25.84,
+        29.5
+      ],
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "sentence_key": "25.84_27.72_blue_agent_Turn a little more so it doesn",
+          "original_sentence_key": "25.84_27.72_blue_agent_Turn a little more so it doesn",
+          "speaker": "blue_agent",
+          "text": "Turn a little more so it doesn't get stuck.",
+          "communication_category": "confirmation",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "suggest_plan",
+          "success": "unknown",
+          "time_range": [
+            25.84,
+            27.72
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_004",
+          "speech_id": "25.84_27.72_blue_agent_Turn a little more so it doesn"
+        },
+        {
+          "sentence_index": 1,
+          "sentence_key": "27.72_29.36_blue_agent_You got it.",
+          "original_sentence_key": "27.72_29.36_blue_agent_You got it.",
+          "speaker": "red_agent",
+          "text": "You got it.",
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "success": "unknown",
+          "time_range": [
+            27.72,
+            29.36
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_004",
+          "speech_id": "27.72_29.36_blue_agent_You got it."
+        }
+      ]
+    },
+    {
+      "time_range": [
+        36.38,
+        37.54
+      ],
+      "communication_category": "Synchronize low-level plan",
+      "follow_label": "follow",
+      "action_window": [
+        36.38,
+        39.0
+      ],
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "sentence_key": "36.38_37.54_red_agent_You need to turn again.",
+          "original_sentence_key": "36.38_37.54_red_agent_You need to turn again.",
+          "speaker": "red_agent",
+          "text": "You need to turn again.",
+          "communication_category": "Synchronize low-level plan",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "suggest_plan",
+          "success": "unknown",
+          "time_range": [
+            36.38,
+            37.54
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_005",
+          "speech_id": "36.38_37.54_red_agent_You need to turn again."
+        }
+      ]
+    },
+    {
+      "time_range": [
+        40.96,
+        44.9
+      ],
+      "communication_category": "Synchronize low-level plan",
+      "follow_label": "unclear",
+      "action_window": [
+        38.94,
+        49.9
+      ],
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "sentence_key": "40.96_43.52_blue_agent_Just grab the bottom.",
+          "original_sentence_key": "40.96_43.52_blue_agent_Just grab the bottom.",
+          "speaker": "blue_agent",
+          "text": "Just grab the bottom.",
+          "communication_category": "Synchronize low-level plan",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "suggest_plan",
+          "success": "unknown",
+          "time_range": [
+            40.96,
+            43.52
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_006",
+          "speech_id": "40.96_43.52_blue_agent_Just grab the bottom."
+        },
+        {
+          "sentence_index": 1,
+          "sentence_key": "44.02_44.90_red_agent_Yeah.",
+          "original_sentence_key": "44.02_44.90_blue_agent_Yeah.",
+          "speaker": "red_agent",
+          "text": "Yeah.",
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "success": "unknown",
+          "time_range": [
+            44.02,
+            44.9
+          ],
+          "is_filler_like": false,
+          "conversation_id": "conv_006",
+          "speech_id": "44.02_44.90_red_agent_Yeah."
+        }
+      ]
+    }
+  ],
+  "action_episodes": [
+    {
+      "action_episode_id": "blue_agent_action_episode_001",
+      "agent": "blue_agent",
+      "time_range": [
+        1.0,
+        7.0
+      ],
+      "step_range": [
+        14,
+        93
+      ],
+      "title": "Grabs and moves blue square into target area"
+    },
+    {
+      "action_episode_id": "blue_agent_action_episode_003",
+      "agent": "blue_agent",
+      "time_range": [
+        7.0,
+        10.0
+      ],
+      "step_range": [
+        106,
+        150
+      ],
+      "title": "Goes to grab the big brown object"
+    },
+    {
+      "action_episode_id": "blue_agent_action_episode_002",
+      "agent": "blue_agent",
+      "time_range": [
+        10.0,
+        12.0
+      ],
+      "step_range": [
+        96,
+        105
+      ],
+      "title": "Hesitates to help Red Agent"
+    },
+    {
+      "action_episode_id": "blue_agent_action_episode_004",
+      "agent": "blue_agent",
+      "time_range": [
+        12.0,
+        19.0
+      ],
+      "step_range": [
+        151,
+        198
+      ],
+      "title": "Goes to grab the big brown object"
+    },
+    {
+      "action_episode_id": "blue_agent_action_episode_005",
+      "agent": "blue_agent",
+      "time_range": [
+        19.0,
+        22.0
+      ],
+      "step_range": [
+        206,
+        221
+      ],
+      "title": "Moves the big Object"
+    },
+    {
+      "action_episode_id": "blue_agent_action_episode_006",
+      "agent": "blue_agent",
+      "time_range": [
+        22.0,
+        23.0
+      ],
+      "step_range": [
+        222,
+        257
+      ],
+      "title": "Adjusts grab position"
+    },
+    {
+      "action_episode_id": "blue_agent_action_episode_007",
+      "agent": "blue_agent",
+      "time_range": [
+        23.0,
+        26.0
+      ],
+      "step_range": [
+        260,
+        279
+      ],
+      "title": "Moves the big object and get stuck"
+    },
+    {
+      "action_episode_id": "blue_agent_action_episode_008",
+      "agent": "blue_agent",
+      "time_range": [
+        26.0,
+        29.0
+      ],
+      "step_range": [
+        290,
+        295
+      ],
+      "title": "Changes grab position"
+    },
+    {
+      "action_episode_id": "blue_agent_action_episode_009",
+      "agent": "blue_agent",
+      "time_range": [
+        29.0,
+        32.0
+      ],
+      "step_range": [
+        296,
+        307
+      ],
+      "title": "Moves the big object"
+    },
+    {
+      "action_episode_id": "blue_agent_action_episode_010",
+      "agent": "blue_agent",
+      "time_range": [
+        32.0,
+        36.0
+      ],
+      "step_range": [
+        308,
+        361
+      ],
+      "title": "Changes grab position and get stuck"
+    },
+    {
+      "action_episode_id": "blue_agent_action_episode_011",
+      "agent": "blue_agent",
+      "time_range": [
+        36.0,
+        38.0
+      ],
+      "step_range": [
+        364,
+        388
+      ],
+      "title": "Changes grab position"
+    },
+    {
+      "action_episode_id": "blue_agent_action_episode_012",
+      "agent": "blue_agent",
+      "time_range": [
+        38.0,
+        40.0
+      ],
+      "step_range": [
+        389,
+        394
+      ],
+      "title": "Moves the big object and get stuck"
+    },
+    {
+      "action_episode_id": "blue_agent_action_episode_013",
+      "agent": "blue_agent",
+      "time_range": [
+        40.0,
+        46.0
+      ],
+      "step_range": [
+        395,
+        440
+      ],
+      "title": "Changes the grab position to the top and moves the big object to the target area"
+    },
+    {
+      "action_episode_id": "red_agent_action_episode_002",
+      "agent": "red_agent",
+      "time_range": [
+        1.0,
+        8.0
+      ],
+      "step_range": [
+        12,
+        91
+      ],
+      "title": "Grabs and moves yellow circle into target area."
+    },
+    {
+      "action_episode_id": "red_agent_action_episode_003",
+      "agent": "red_agent",
+      "time_range": [
+        8.0,
+        14.0
+      ],
+      "step_range": [
+        96,
+        105
+      ],
+      "title": "Change the position of the yellow circle"
+    },
+    {
+      "action_episode_id": "red_agent_action_episode_006",
+      "agent": "red_agent",
+      "time_range": [
+        14.0,
+        19.0
+      ],
+      "step_range": [
+        202,
+        221
+      ],
+      "title": "Goes to grab the big object"
+    },
+    {
+      "action_episode_id": "red_agent_action_episode_005",
+      "agent": "red_agent",
+      "time_range": [
+        19.0,
+        22.0
+      ],
+      "step_range": [
+        151,
+        195
+      ],
+      "title": "Moves the big Object"
+    },
+    {
+      "action_episode_id": "red_agent_action_episode_007",
+      "agent": "red_agent",
+      "time_range": [
+        22.0,
+        23.0
+      ],
+      "step_range": [
+        222,
+        258
+      ],
+      "title": "Adjusts grab position"
+    },
+    {
+      "action_episode_id": "manual_action_red_agent_1779828529460",
+      "agent": "red_agent",
+      "time_range": [
+        23.0,
+        26.0
+      ],
+      "step_range": null,
+      "title": "Moves the big object and get stuck"
+    },
+    {
+      "action_episode_id": "red_agent_action_episode_008",
+      "agent": "red_agent",
+      "time_range": [
+        26.0,
+        29.0
+      ],
+      "step_range": [
+        261,
+        294
+      ],
+      "title": "Changes grab position"
+    },
+    {
+      "action_episode_id": "red_agent_action_episode_009",
+      "agent": "red_agent",
+      "time_range": [
+        29.0,
+        32.0
+      ],
+      "step_range": [
+        295,
+        307
+      ],
+      "title": "Moves the big object"
+    },
+    {
+      "action_episode_id": "red_agent_action_episode_010",
+      "agent": "red_agent",
+      "time_range": [
+        32.0,
+        36.0
+      ],
+      "step_range": [
+        308,
+        363
+      ],
+      "title": "Changes grab position and get stuck"
+    },
+    {
+      "action_episode_id": "red_agent_action_episode_011",
+      "agent": "red_agent",
+      "time_range": [
+        36.0,
+        38.0
+      ],
+      "step_range": [
+        364,
+        388
+      ],
+      "title": "Changes grab position"
+    },
+    {
+      "action_episode_id": "red_agent_action_episode_012",
+      "agent": "red_agent",
+      "time_range": [
+        38.0,
+        40.0
+      ],
+      "step_range": [
+        389,
+        394
+      ],
+      "title": "Moves the big object and get stuck"
+    },
+    {
+      "action_episode_id": "red_agent_action_episode_013",
+      "agent": "red_agent",
+      "time_range": [
+        40.0,
+        46.0
+      ],
+      "step_range": [
+        395,
+        462
+      ],
+      "title": "Changes the grab position to the top and moves the big object to the target area"
+    }
+  ],
+  "dependency_relations": [
+    {
+      "relation_id": "dep_rel_1779828606582_2",
+      "source_id": "27.72_29.36_blue_agent_You got it.",
+      "source_type": "speech",
+      "target_id": "25.84_27.72_blue_agent_Turn a little more so it doesn",
+      "target_type": "speech",
+      "relation_type": "speech_speech",
+      "label": "confirm"
+    },
+    {
+      "relation_id": "dep_rel_1779829220833_12",
+      "source_id": "3.88_4.44_blue_agent_Yeah.",
+      "source_type": "speech",
+      "target_id": "0.98_2.54_red_agent_Small first, maybe?",
+      "target_type": "speech",
+      "relation_type": "speech_speech",
+      "label": "confirm",
+      "label_position": {
+        "x": 457.5,
+        "y": 474.0
+      }
+    },
+    {
+      "relation_id": "dep_rel_1779829237778_13",
+      "source_id": "9.88_10.44_red_agent_Yeah.",
+      "source_type": "speech",
+      "target_id": "6.48_8.26_blue_agent_And then we go from both sides",
+      "target_type": "speech",
+      "relation_type": "speech_speech",
+      "label": "confirm",
+      "label_position": {
+        "x": 1020.5,
+        "y": 473.0
+      }
+    },
+    {
+      "relation_id": "dep_rel_1779829297288_16",
+      "source_id": "16.86_17.14_blue_agent_Yes.",
+      "source_type": "speech",
+      "target_id": "14.48_16.58_red_agent_I will just go from top.",
+      "target_type": "speech",
+      "relation_type": "speech_speech",
+      "label": "confirm",
+      "label_position": {
+        "x": 1828.5,
+        "y": 467.0
+      }
+    },
+    {
+      "relation_id": "dep_rel_1779829305229_17",
+      "source_id": "44.02_44.90_red_agent_Yeah.",
+      "source_type": "speech",
+      "target_id": "40.96_43.52_blue_agent_Just grab the bottom.",
+      "target_type": "speech",
+      "relation_type": "speech_speech",
+      "label": "confirm"
+    },
+    {
+      "relation_id": "dep_rel_1779830430159_26",
+      "source_id": "blue_agent_action_episode_010",
+      "source_type": "action",
+      "target_id": "conv_005",
+      "target_type": "conversation",
+      "relation_type": "action_conversation",
+      "label": "trigger"
+    },
+    {
+      "relation_id": "dep_rel_1779833074863_28",
+      "source_id": "manual_action_red_agent_1779828529460",
+      "source_type": "action",
+      "target_id": "conv_004",
+      "target_type": "conversation",
+      "relation_type": "action_conversation",
+      "label": "trigger",
+      "label_position": {
+        "x": 2758.5,
+        "y": 303.0
+      }
+    },
+    {
+      "relation_id": "dep_rel_1779833136062_26",
+      "source_id": "red_agent_action_episode_012",
+      "source_type": "action",
+      "target_id": "conv_006",
+      "target_type": "conversation",
+      "relation_type": "action_conversation",
+      "label": "trigger"
+    },
+    {
+      "relation_id": "dep_rel_1779833165998_28",
+      "source_id": "red_agent_action_episode_010",
+      "source_type": "action",
+      "target_id": "conv_005",
+      "target_type": "conversation",
+      "relation_type": "action_conversation",
+      "label": "trigger",
+      "label_position": {
+        "x": 3770.5,
+        "y": 395.0
+      }
+    },
+    {
+      "relation_id": "dep_rel_1779834219806_26",
+      "source_id": "red_agent_action_episode_002",
+      "source_type": "action",
+      "target_id": "conv_002",
+      "target_type": "conversation",
+      "relation_type": "action_conversation",
+      "label": "trigger",
+      "label_position": {
+        "x": 940.5,
+        "y": 298.0
+      }
+    },
+    {
+      "relation_id": "dep_rel_1779834533468_27",
+      "source_id": "13.92_14.28_blue_agent_Okay_a_1779829162810",
+      "source_type": "speech",
+      "target_id": "11.27_14.28_red_agent_You just grab the bigger one.",
+      "target_type": "speech",
+      "relation_type": "speech_speech",
+      "label": "confirm",
+      "label_position": {
+        "x": 1534.5,
+        "y": 475.0
+      }
+    },
+    {
+      "relation_id": "dep_rel_1779834556798_28",
+      "source_id": "11.27_14.28_red_agent_You just grab the bigger one.",
+      "source_type": "speech",
+      "target_id": "10.44_11.27_blue_agent_Can you?",
+      "target_type": "speech",
+      "relation_type": "speech_speech",
+      "label": "revise_plan",
+      "label_position": {
+        "x": 1312.5,
+        "y": 474.0
+      }
+    },
+    {
+      "relation_id": "dep_rel_1779835411392_27",
+      "source_id": "blue_agent_action_episode_012",
+      "source_type": "action",
+      "target_id": "conv_006",
+      "target_type": "conversation",
+      "relation_type": "action_conversation",
+      "label": "trigger"
+    },
+    {
+      "relation_id": "dep_rel_1779835421266_27",
+      "source_id": "blue_agent_action_episode_007",
+      "source_type": "action",
+      "target_id": "conv_004",
+      "target_type": "conversation",
+      "relation_type": "action_conversation",
+      "label": "trigger"
+    },
+    {
+      "relation_id": "dep_rel_1780949296522_28",
+      "source_id": "conv_000",
+      "source_type": "conversation",
+      "target_id": "red_agent_action_episode_002",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    },
+    {
+      "relation_id": "dep_rel_1780949300981_28",
+      "source_id": "conv_000",
+      "source_type": "conversation",
+      "target_id": "blue_agent_action_episode_001",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    },
+    {
+      "relation_id": "dep_rel_1780949306324_28",
+      "source_id": "conv_001",
+      "source_type": "conversation",
+      "target_id": "blue_agent_action_episode_003",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    },
+    {
+      "relation_id": "dep_rel_1780949311413_28",
+      "source_id": "conv_001",
+      "source_type": "conversation",
+      "target_id": "blue_agent_action_episode_004",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow",
+      "label_position": {
+        "x": 1182.5,
+        "y": 688.0
+      }
+    },
+    {
+      "relation_id": "dep_rel_1780949318106_28",
+      "source_id": "conv_002",
+      "source_type": "conversation",
+      "target_id": "blue_agent_action_episode_002",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow",
+      "label_position": {
+        "x": 1308.5,
+        "y": 653.0
+      }
+    },
+    {
+      "relation_id": "dep_rel_1780949342453_28",
+      "source_id": "conv_002",
+      "source_type": "conversation",
+      "target_id": "red_agent_action_episode_003",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    },
+    {
+      "relation_id": "dep_rel_1780949346297_28",
+      "source_id": "conv_003",
+      "source_type": "conversation",
+      "target_id": "red_agent_action_episode_006",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    },
+    {
+      "relation_id": "dep_rel_1780949351142_28",
+      "source_id": "conv_002",
+      "source_type": "conversation",
+      "target_id": "blue_agent_action_episode_004",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow",
+      "label_position": {
+        "x": 1546.5,
+        "y": 658.0
+      }
+    },
+    {
+      "relation_id": "dep_rel_1780949364393_28",
+      "source_id": "conv_004",
+      "source_type": "conversation",
+      "target_id": "red_agent_action_episode_008",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    },
+    {
+      "relation_id": "dep_rel_1780949368563_28",
+      "source_id": "conv_004",
+      "source_type": "conversation",
+      "target_id": "blue_agent_action_episode_008",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow",
+      "label_position": {
+        "x": 3010.27,
+        "y": 685.0
+      }
+    },
+    {
+      "relation_id": "dep_rel_1780949382093_28",
+      "source_id": "conv_005",
+      "source_type": "conversation",
+      "target_id": "red_agent_action_episode_011",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    },
+    {
+      "relation_id": "dep_rel_1780949386459_28",
+      "source_id": "conv_005",
+      "source_type": "conversation",
+      "target_id": "blue_agent_action_episode_011",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow",
+      "label_position": {
+        "x": 3948.56,
+        "y": 681.0
+      }
+    },
+    {
+      "relation_id": "dep_rel_1780949393487_28",
+      "source_id": "conv_006",
+      "source_type": "conversation",
+      "target_id": "blue_agent_action_episode_013",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    },
+    {
+      "relation_id": "dep_rel_1780949397600_28",
+      "source_id": "conv_006",
+      "source_type": "conversation",
+      "target_id": "red_agent_action_episode_013",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    }
+  ]
+}

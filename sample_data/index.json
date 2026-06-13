@@ -1,0 +1,31 @@
+{
+  "sessions": [
+    {
+      "id": "CrossCenterOpen_20260408182038",
+      "label": "CrossCenterOpen_20260408182038",
+      "status": "starter",
+      "editable": true,
+      "manifest": "./CrossCenterOpen_20260408182038/CrossCenterOpen_20260408182038_labeled.json",
+      "video": "./CrossCenterOpen_20260408182038/CrossCenterOpen_20260408182038_replay.mp4",
+      "audio": "./CrossCenterOpen_20260408182038/CrossCenterOpen_20260408182038.wav"
+    },
+    {
+      "id": "CenterSquareWall_20260408181510",
+      "label": "CenterSquareWall_20260408181510",
+      "status": "annotated",
+      "editable": true,
+      "manifest": "./CenterSquareWall_20260408181510/CenterSquareWall_20260408181510_labeled.json",
+      "video": "./CenterSquareWall_20260408181510/CenterSquareWall_20260408181510_replay.mp4",
+      "audio": "./CenterSquareWall_20260408181510/CenterSquareWall_20260408181510.wav"
+    },
+    {
+      "id": "CenterSquareWall_20260408181558",
+      "label": "CenterSquareWall_20260408181558",
+      "status": "annotated",
+      "editable": true,
+      "manifest": "./CenterSquareWall_20260408181558/CenterSquareWall_20260408181558_labeled.json",
+      "video": "./CenterSquareWall_20260408181558/CenterSquareWall_20260408181558_replay.mp4",
+      "audio": "./CenterSquareWall_20260408181558/CenterSquareWall_20260408181558.wav"
+    }
+  ]
+}

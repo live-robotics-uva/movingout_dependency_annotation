@@ -1,0 +1,686 @@
+{
+  "metadata": {
+    "schema_version": 3,
+    "source": "CenterSquareWall_20260408181558",
+    "trajectory_path": "CenterSquareWall_20260408181558.json",
+    "audio_path": "CenterSquareWall_20260408181558.wav",
+    "duration_s": 28.22,
+    "total_steps": 282,
+    "speakers": {
+      "Speaker 1": "blue_agent",
+      "Speaker 2": "red_agent"
+    },
+    "asr_model": "whisper-large-v3",
+    "response_merge_window_s": 3.0,
+    "default_action_window_tail_s": 5.0,
+    "dependency_relation_label_sets": {
+      "action_action": [
+        "trigger",
+        "follow",
+        "others"
+      ],
+      "action_conversation": [
+        "trigger",
+        "follow",
+        "others"
+      ],
+      "action_speech": [
+        "trigger",
+        "follow",
+        "others"
+      ],
+      "speech_speech": [
+        "revise_plan",
+        "confirm",
+        "refuse",
+        "others"
+      ],
+      "conversation_conversation": [
+        "response",
+        "confirm",
+        "answer",
+        "clarify",
+        "revise_plan",
+        "unclear"
+      ]
+    },
+    "action_episodes_source": "manual"
+  },
+  "conversations": [
+    {
+      "conversation_id": "conv_000",
+      "time_range": [
+        0.66,
+        1.84
+      ],
+      "action_window": [
+        0.66,
+        6.84
+      ],
+      "follow_label": "unclear",
+      "collapsed": false,
+      "sentences": [
+        {
+          "speaker": "red_agent",
+          "text": "Small first again.",
+          "time_range": [
+            0.66,
+            1.84
+          ],
+          "communication_category": "confirmation",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "refuse",
+          "conversation_confidence": 0,
+          "success": "unknown",
+          "is_filler_like": true,
+          "conversation_id": "conv_000",
+          "speech_id": "conv_000_speech_000",
+          "sentence_index": 0
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv_001",
+      "time_range": [
+        10.2,
+        14.12
+      ],
+      "action_window": [
+        10.2,
+        19.12
+      ],
+      "follow_label": "unclear",
+      "collapsed": false,
+      "sentences": [
+        {
+          "speaker": "blue_agent",
+          "text": "Oh, so it's like, we need to turn at each corner.",
+          "time_range": [
+            10.2,
+            14.12
+          ],
+          "communication_category": "confirmation",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "clarify",
+          "conversation_confidence": 0,
+          "success": "unknown",
+          "is_filler_like": true,
+          "conversation_id": "conv_001",
+          "speech_id": "conv_001_speech_000",
+          "sentence_index": 0
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv_002",
+      "time_range": [
+        18.6,
+        21.56
+      ],
+      "action_window": [
+        18.6,
+        25.0
+      ],
+      "follow_label": "unclear",
+      "collapsed": false,
+      "sentences": [
+        {
+          "speaker": "red_agent",
+          "text": "Turn to turn",
+          "time_range": [
+            18.6,
+            20.0
+          ],
+          "communication_category": "confirmation",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "ask_information",
+          "conversation_confidence": 0,
+          "success": "unknown",
+          "is_filler_like": true,
+          "conversation_id": "conv_002",
+          "speech_id": "conv_002_speech_000",
+          "sentence_index": 0
+        },
+        {
+          "speaker": "blue_agent",
+          "text": "OK, it's OK right now.",
+          "time_range": [
+            20.16,
+            21.56
+          ],
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "conversation_confidence": 0,
+          "success": "unknown",
+          "is_filler_like": true,
+          "conversation_id": "conv_002",
+          "speech_id": "conv_003_speech_000",
+          "sentence_index": 1
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv_003",
+      "time_range": [
+        21.86,
+        24.22
+      ],
+      "action_window": [
+        21.86,
+        28.34
+      ],
+      "follow_label": "unclear",
+      "collapsed": false,
+      "sentences": [
+        {
+          "speaker": "red_agent",
+          "text": "OK, that works.",
+          "time_range": [
+            21.86,
+            23.34
+          ],
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "conversation_confidence": 0,
+          "success": "unknown",
+          "is_filler_like": true,
+          "conversation_id": "conv_003",
+          "speech_id": "conv_004_speech_000",
+          "sentence_index": 0
+        },
+        {
+          "speaker": "blue_agent",
+          "text": "Yeah, it works.",
+          "time_range": [
+            23.56,
+            24.22
+          ],
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "conversation_confidence": 0,
+          "success": "unknown",
+          "is_filler_like": true,
+          "conversation_id": "conv_003",
+          "speech_id": "conv_005_speech_000",
+          "sentence_index": 1
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv_004",
+      "time_range": [
+        25.34,
+        26.7
+      ],
+      "action_window": [
+        23.56,
+        31.7
+      ],
+      "follow_label": "unclear",
+      "collapsed": false,
+      "sentences": [
+        {
+          "speaker": "blue_agent",
+          "text": "We need to turn here.",
+          "time_range": [
+            25.34,
+            26.7
+          ],
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "clarify",
+          "conversation_confidence": 0,
+          "success": "unknown",
+          "is_filler_like": true,
+          "conversation_id": "conv_004",
+          "speech_id": "conv_005_speech_001",
+          "sentence_index": 0
+        }
+      ]
+    }
+  ],
+  "paragraphs": [
+    {
+      "time_range": [
+        0.66,
+        1.84
+      ],
+      "communication_category": "confirmation",
+      "follow_label": "unclear",
+      "action_window": [
+        0.66,
+        6.84
+      ],
+      "sentences": [
+        {
+          "speaker": "red_agent",
+          "text": "Small first again.",
+          "time_range": [
+            0.66,
+            1.84
+          ],
+          "communication_category": "confirmation",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "refuse",
+          "conversation_confidence": 0,
+          "success": "unknown",
+          "is_filler_like": true,
+          "conversation_id": "conv_000",
+          "speech_id": "conv_000_speech_000",
+          "sentence_index": 0
+        }
+      ]
+    },
+    {
+      "time_range": [
+        10.2,
+        14.12
+      ],
+      "communication_category": "confirmation",
+      "follow_label": "unclear",
+      "action_window": [
+        10.2,
+        19.12
+      ],
+      "sentences": [
+        {
+          "speaker": "blue_agent",
+          "text": "Oh, so it's like, we need to turn at each corner.",
+          "time_range": [
+            10.2,
+            14.12
+          ],
+          "communication_category": "confirmation",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "clarify",
+          "conversation_confidence": 0,
+          "success": "unknown",
+          "is_filler_like": true,
+          "conversation_id": "conv_001",
+          "speech_id": "conv_001_speech_000",
+          "sentence_index": 0
+        }
+      ]
+    },
+    {
+      "time_range": [
+        18.6,
+        21.56
+      ],
+      "communication_category": "confirmation",
+      "follow_label": "unclear",
+      "action_window": [
+        18.6,
+        25.0
+      ],
+      "sentences": [
+        {
+          "speaker": "red_agent",
+          "text": "Turn to turn",
+          "time_range": [
+            18.6,
+            20.0
+          ],
+          "communication_category": "confirmation",
+          "conversation_role": "initiating_conversation",
+          "communication_function": "ask_information",
+          "conversation_confidence": 0,
+          "success": "unknown",
+          "is_filler_like": true,
+          "conversation_id": "conv_002",
+          "speech_id": "conv_002_speech_000",
+          "sentence_index": 0
+        },
+        {
+          "speaker": "blue_agent",
+          "text": "OK, it's OK right now.",
+          "time_range": [
+            20.16,
+            21.56
+          ],
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "conversation_confidence": 0,
+          "success": "unknown",
+          "is_filler_like": true,
+          "conversation_id": "conv_002",
+          "speech_id": "conv_003_speech_000",
+          "sentence_index": 1
+        }
+      ]
+    },
+    {
+      "time_range": [
+        21.86,
+        24.22
+      ],
+      "communication_category": "confirmation",
+      "follow_label": "unclear",
+      "action_window": [
+        21.86,
+        28.34
+      ],
+      "sentences": [
+        {
+          "speaker": "red_agent",
+          "text": "OK, that works.",
+          "time_range": [
+            21.86,
+            23.34
+          ],
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "conversation_confidence": 0,
+          "success": "unknown",
+          "is_filler_like": true,
+          "conversation_id": "conv_003",
+          "speech_id": "conv_004_speech_000",
+          "sentence_index": 0
+        },
+        {
+          "speaker": "blue_agent",
+          "text": "Yeah, it works.",
+          "time_range": [
+            23.56,
+            24.22
+          ],
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "acknowledge",
+          "conversation_confidence": 0,
+          "success": "unknown",
+          "is_filler_like": true,
+          "conversation_id": "conv_003",
+          "speech_id": "conv_005_speech_000",
+          "sentence_index": 1
+        }
+      ]
+    },
+    {
+      "time_range": [
+        25.34,
+        26.7
+      ],
+      "communication_category": "confirmation",
+      "follow_label": "unclear",
+      "action_window": [
+        23.56,
+        31.7
+      ],
+      "sentences": [
+        {
+          "speaker": "blue_agent",
+          "text": "We need to turn here.",
+          "time_range": [
+            25.34,
+            26.7
+          ],
+          "communication_category": "confirmation",
+          "conversation_role": "response",
+          "communication_function": "clarify",
+          "conversation_confidence": 0,
+          "success": "unknown",
+          "is_filler_like": true,
+          "conversation_id": "conv_004",
+          "speech_id": "conv_005_speech_001",
+          "sentence_index": 0
+        }
+      ]
+    }
+  ],
+  "action_episodes": [
+    {
+      "action_episode_id": "blue_agent_action_episode_001",
+      "agent": "blue_agent",
+      "time_range": [
+        0.63,
+        3.75
+      ],
+      "step_range": [
+        8,
+        39
+      ],
+      "title": "Goes to grab the small blue square"
+    },
+    {
+      "action_episode_id": "blue_agent_action_episode_002",
+      "agent": "blue_agent",
+      "time_range": [
+        4.85,
+        8.38
+      ],
+      "step_range": [
+        50,
+        85
+      ],
+      "title": "Moves the small blue square"
+    },
+    {
+      "action_episode_id": "blue_agent_action_episode_004",
+      "agent": "blue_agent",
+      "time_range": [
+        8.38,
+        16.53
+      ],
+      "step_range": [
+        138,
+        165
+      ],
+      "title": "Goes to grab the big brown square"
+    },
+    {
+      "action_episode_id": "blue_agent_action_episode_005",
+      "agent": "blue_agent",
+      "time_range": [
+        16.53,
+        28.32
+      ],
+      "step_range": [
+        173,
+        282
+      ],
+      "title": "Moves the big brown square"
+    },
+    {
+      "action_episode_id": "red_agent_action_episode_001",
+      "agent": "red_agent",
+      "time_range": [
+        0.52,
+        4.05
+      ],
+      "step_range": [
+        7,
+        42
+      ],
+      "title": "Goes to grab the small yellow circle"
+    },
+    {
+      "action_episode_id": "red_agent_action_episode_002",
+      "agent": "red_agent",
+      "time_range": [
+        4.05,
+        6.67
+      ],
+      "step_range": [
+        42,
+        68
+      ],
+      "title": "Moves the small yellow circle"
+    },
+    {
+      "action_episode_id": "red_agent_action_episode_003",
+      "agent": "red_agent",
+      "time_range": [
+        6.67,
+        14.21
+      ],
+      "step_range": [
+        68,
+        142
+      ],
+      "title": "Goes to grab the big brown square"
+    },
+    {
+      "action_episode_id": "red_agent_action_episode_005",
+      "agent": "red_agent",
+      "time_range": [
+        16.73,
+        19.25
+      ],
+      "step_range": [
+        168,
+        193
+      ],
+      "title": "Moves the big brown square"
+    },
+    {
+      "action_episode_id": "red_agent_action_episode_006",
+      "agent": "red_agent",
+      "time_range": [
+        19.25,
+        21.57
+      ],
+      "step_range": [
+        193,
+        216
+      ],
+      "title": "Change the grab position"
+    },
+    {
+      "action_episode_id": "red_agent_action_episode_007",
+      "agent": "red_agent",
+      "time_range": [
+        21.57,
+        28.32
+      ],
+      "step_range": [
+        216,
+        282
+      ],
+      "title": "Moves the big brown square"
+    }
+  ],
+  "dependency_relations": [
+    {
+      "relation_id": "dep_rel_1780523821381_1",
+      "source_id": "conv_000",
+      "source_type": "conversation",
+      "target_id": "blue_agent_action_episode_001",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    },
+    {
+      "relation_id": "dep_rel_1780523826680_2",
+      "source_id": "conv_000",
+      "source_type": "conversation",
+      "target_id": "red_agent_action_episode_001",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    },
+    {
+      "relation_id": "dep_rel_1780523839512_3",
+      "source_id": "conv_000",
+      "source_type": "conversation",
+      "target_id": "red_agent_action_episode_002",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    },
+    {
+      "relation_id": "dep_rel_1780523842499_4",
+      "source_id": "conv_000",
+      "source_type": "conversation",
+      "target_id": "blue_agent_action_episode_002",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    },
+    {
+      "relation_id": "dep_rel_1780523970332_5",
+      "source_id": "red_agent_action_episode_005",
+      "source_type": "action",
+      "target_id": "conv_002",
+      "target_type": "conversation",
+      "relation_type": "action_conversation",
+      "label": "trigger"
+    },
+    {
+      "relation_id": "dep_rel_1780523971470_6",
+      "source_id": "conv_002",
+      "source_type": "conversation",
+      "target_id": "red_agent_action_episode_006",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow",
+      "label_position": {
+        "x": 2179.5,
+        "y": 273.0
+      }
+    },
+    {
+      "relation_id": "dep_rel_1780523979082_7",
+      "source_id": "conv_001",
+      "source_type": "conversation",
+      "target_id": "blue_agent_action_episode_005",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    },
+    {
+      "relation_id": "dep_rel_1780523982141_8",
+      "source_id": "conv_002",
+      "source_type": "conversation",
+      "target_id": "blue_agent_action_episode_005",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    },
+    {
+      "relation_id": "dep_rel_1780524008626_9",
+      "source_id": "conv_001",
+      "source_type": "conversation",
+      "target_id": "red_agent_action_episode_007",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow",
+      "label_position": {
+        "x": 2418.5,
+        "y": 323.0
+      }
+    },
+    {
+      "relation_id": "dep_rel_1780524016818_10",
+      "source_id": "conv_001",
+      "source_type": "conversation",
+      "target_id": "red_agent_action_episode_005",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    },
+    {
+      "relation_id": "dep_rel_1780524046642_11",
+      "source_id": "conv_004",
+      "source_type": "conversation",
+      "target_id": "blue_agent_action_episode_005",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    },
+    {
+      "relation_id": "dep_rel_1780524049068_12",
+      "source_id": "conv_004",
+      "source_type": "conversation",
+      "target_id": "red_agent_action_episode_007",
+      "target_type": "action",
+      "relation_type": "action_conversation",
+      "label": "follow"
+    }
+  ]
+}

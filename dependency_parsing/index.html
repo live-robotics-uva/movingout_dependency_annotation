@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Moving Out Dependency Parsing</title>
+    <link rel="stylesheet" href="../conversation_annotation/styles.css?v=20260521-conversation-schema" />
+    <link rel="stylesheet" href="./styles.css?v=20260529-dependency-parsing-v42" />
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@18",
+          "react-dom/client": "https://esm.sh/react-dom@18/client"
+        }
+      }
+    </script>
+    <script>
+      (() => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("server") === "1") sessionStorage.removeItem("WEB_VIZ_STATIC_MODE");
+        const requested = params.get("static") === "1" || window.location.hostname.endsWith("github.io");
+        if (requested) sessionStorage.setItem("WEB_VIZ_STATIC_MODE", "1");
+        window.WEB_VIZ_STATIC_CONFIG = {
+          enabled: requested || sessionStorage.getItem("WEB_VIZ_STATIC_MODE") === "1",
+          dataIndexUrl: "../sample_data/index.json",
+          allowEditing: true,
+          saveMode: "download",
+        };
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./app.js?v=20260529-dependency-parsing-v42"></script>
+  </body>
+</html>
