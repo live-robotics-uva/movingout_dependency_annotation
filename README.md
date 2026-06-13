@@ -1,4 +1,4 @@
 ﻿# MovingOut Dependency Annotation
 
-Static GitHub Pages site for dependency parsing annotation.
+Static web page for dependency parsing annotation sample.
 
