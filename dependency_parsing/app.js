@@ -1390,8 +1390,8 @@ function StaticSessionPicker({ sessions, selectedId, onSelect }) {
           h(
             "div",
             { className: "pipeline-option-info" },
-            h("div", { className: "pipeline-option-title" }, "GitHub Pages static mode"),
-            h("p", null, "Select a sample session. Edits stay in the browser until you download the JSON.")
+            h("div", { className: "pipeline-option-title" }, "Sample Mode"),
+            h("p", null, "Select a sample session.")
           ),
           h(
             "div",
@@ -3046,7 +3046,7 @@ function App() {
         if (session) {
           await loadStaticSession(session, baseUrl);
         } else {
-          setStatus("static mode");
+          setStatus("Sample Mode");
         }
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : String(e));
