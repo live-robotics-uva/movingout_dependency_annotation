@@ -3256,13 +3256,7 @@ function App() {
     h(
       "header",
       { className: "toolbar dependency-toolbar" },
-      h("h1", null, "Moving Out Dependency Parsing"),
-      h(
-        "nav",
-        { className: "mode-nav" },
-        h("a", { href: "../conversation_annotation/" }, "Conversation Annotation"),
-        h("a", { href: "../" }, "All interfaces")
-      )
+      h("h1", null, "Moving Out Dependency Parsing")
     ),
     IS_STATIC_MODE
       ? h(StaticSessionPicker, {
