@@ -16,11 +16,15 @@ const MIN_NODE_W = 132;
 const FRAME_STEP_S = 1;
 const THUMB_W = 152;
 const THUMB_H = 88;
+const PLAYHEAD_SCROLL_ANCHOR = 0.4;
+const AUTO_SCROLL_CATCH_UP_MULTIPLIER = 2;
+const AUTO_SCROLL_SETTLE_PX = 2;
 const SPEECH_MIN_W = 110;
 const ACTION_NODE_H = 70;
 const SPEECH_NODE_H = 62;
 const ACTION_ROW_H = 82;
-const SPEECH_ROW_H = 120;
+const SPEECH_ROW_H = ACTION_ROW_H;
+const ROW_NODE_TOP_OFFSET = 5;
 const ROWS = {
   timeline: { top: 0, height: 120, label: "Timeline" },
   redAction: { top: 70, height: ACTION_ROW_H, label: "Red Agent Action" },
@@ -34,16 +38,15 @@ const RELATION_LANE_SPACING = 25;
 const RELATION_HORIZONTAL_GAP = 25;
 const RELATION_STEM_SPACING = 26;
 const RELATION_ANCHOR_SPREAD = 0.16;
-const RELATION_LABEL_MAX_DISTANCE = 30;
 const RELATION_ENDPOINT_STACK_GAP = 15;
 const RELATION_ENDPOINT_EDGE_INSET = 6;
 const RELATION_LANE_EDGE_PAD = 6;
 const MIN_LANE_GAPS = {
-  redActionAbove: 70,
+  redActionAbove: 0,
   redActionGap: 70,
   speechGap: 70,
   blueActionGap: 70,
-  blueActionBelow: 70,
+  blueActionBelow: 0,
 };
 const EMPTY_LANE_NEEDS = Object.freeze({
   redActionAbove: 0,
@@ -52,14 +55,19 @@ const EMPTY_LANE_NEEDS = Object.freeze({
   blueActionGap: 0,
   blueActionBelow: 0,
 });
-const DEFAULT_RELATION_LABEL_SETS = {
-  action_action: ["trigger", "follow", "others"],
-  action_conversation: ["trigger", "follow", "others"],
-  action_speech: ["trigger", "follow", "others"],
-  speech_speech: ["revise_plan", "confirm", "refuse", "others"],
-  conversation_conversation: ["response", "confirm", "answer", "clarify", "revise_plan", "unclear"],
-};
 const CONVERSATION_ROLE_OPTIONS = ["initiating_conversation", "response"];
+const COMMUNICATION_FUNCTION_OPTIONS = [
+  "request_action",
+  "ask_information",
+  "share_information",
+  "suggest_plan",
+  "promise",
+  "acknowledge",
+  "refuse",
+  "clarify",
+  "revise_plan",
+  "other",
+];
 
 function repoAssetUrl(relPath, cacheBust) {
   if (!relPath) return null;
@@ -222,11 +230,21 @@ function manifestDuration(manifest, conversations, actionEpisodes) {
 }
 
 function relationType(sourceType, targetType) {
-  if (sourceType === "action" && targetType === "action") return "action_action";
+  if (sourceType === "action" && targetType === "action") return null;
   if (sourceType === "speech" && targetType === "speech") return "speech_speech";
   if ([sourceType, targetType].includes("action") && [sourceType, targetType].includes("speech")) return "action_speech";
   if (sourceType === "conversation" && targetType === "conversation") return "conversation_conversation";
   return "action_conversation";
+}
+
+function isActionActionRelation(rel) {
+  return rel?.relation_type === "action_action" || (rel?.source_type === "action" && rel?.target_type === "action");
+}
+
+function filterAllowedRelations(relations) {
+  return (relations || [])
+    .filter((rel) => rel && typeof rel === "object" && !isActionActionRelation(rel))
+    .map(sanitizeRelationForClient);
 }
 
 function sortActionEpisodes(episodes) {
@@ -249,22 +267,30 @@ function remapRelations(relations, remapsByType) {
   const seen = new Set();
   const out = [];
   for (const rel of relations || []) {
+    const base = sanitizeRelationForClient(rel);
     const sourceMap = remapsByType[rel.source_type];
     const targetMap = remapsByType[rel.target_type];
     const next = {
-      ...rel,
+      ...base,
       source_id: sourceMap?.get(rel.source_id) || rel.source_id,
       target_id: targetMap?.get(rel.target_id) || rel.target_id,
     };
     if (next.source_type === next.target_type && next.source_id === next.target_id) {
       continue;
     }
-    const key = `${next.source_type}:${next.source_id}->${next.target_type}:${next.target_id}:${next.label}`;
+    const key = `${next.source_type}:${next.source_id}->${next.target_type}:${next.target_id}:${next.relation_type}`;
     if (seen.has(key)) continue;
     seen.add(key);
     out.push(next);
   }
   return out;
+}
+
+function sanitizeRelationForClient(rel) {
+  const rest = { ...(rel || {}) };
+  delete rest.label;
+  delete rest.label_position;
+  return rest;
 }
 
 function removeRelationsForNode(relations, type, id) {
@@ -277,6 +303,20 @@ function removeRelationsForNode(relations, type, id) {
 
 function safeTagName(target) {
   return String(target?.tagName || "").toUpperCase();
+}
+
+function collectSpeechFunctionOptions(conversations, currentFunction = "") {
+  const seen = new Set();
+  const out = [];
+  const add = (value) => {
+    const fn = String(value || "").trim();
+    if (!fn || seen.has(fn)) return;
+    seen.add(fn);
+    out.push(fn);
+  };
+  for (const value of COMMUNICATION_FUNCTION_OPTIONS) add(value);
+  if (!out.length) add("share_information");
+  return out;
 }
 
 function waitForEvent(target, eventName) {
@@ -711,8 +751,7 @@ function relationStraightPathIsClear(rel, points, obstacles) {
   return pathIsClear(points, obstacles);
 }
 
-function relationAllowsStraightPath(rel, src, dst) {
-  if (rel.relation_type === "action_action" && src.rowKey === dst.rowKey) return false;
+function relationAllowsStraightPath() {
   return true;
 }
 
@@ -812,11 +851,6 @@ function buildRelationAnchorOffsets(candidates) {
 function relationLaneCategory(rel, sourceRowKey, targetRowKey) {
   const rowKeys = [sourceRowKey, targetRowKey];
 
-  if (rel.relation_type === "action_action") {
-    if (sourceRowKey === "redAction" && targetRowKey === "redAction") return "redActionAbove";
-    if (sourceRowKey === "blueAction" && targetRowKey === "blueAction") return "blueActionBelow";
-    return "speechGap";
-  }
   if (rel.relation_type === "speech_speech") return "speechGap";
   if (rel.relation_type === "conversation_conversation") return "speechGap";
   if (rowKeys.includes("redAction") && rowKeys.includes("redSpeech")) {
@@ -888,56 +922,33 @@ function pathFromPoints(points) {
     .join(" ");
 }
 
-function closestPointOnSegment(point, a, b) {
-  const dx = b.x - a.x;
-  const dy = b.y - a.y;
-  const lenSq = dx * dx + dy * dy;
-  if (lenSq <= 0.0001) return { ...a, distance: Math.hypot(point.x - a.x, point.y - a.y) };
-  const t = clamp(((point.x - a.x) * dx + (point.y - a.y) * dy) / lenSq, 0, 1);
-  const x = a.x + dx * t;
-  const y = a.y + dy * t;
-  return { x, y, distance: Math.hypot(point.x - x, point.y - y) };
-}
-
-function closestPointOnPath(point, points) {
-  let closest = null;
-  for (let i = 1; i < points.length; i += 1) {
-    const candidate = closestPointOnSegment(point, points[i - 1], points[i]);
-    if (!closest || candidate.distance < closest.distance) closest = candidate;
-  }
-  return closest || { ...point, distance: 0 };
-}
-
-function constrainLabelPositionToRoute(position, route, maxDistance = RELATION_LABEL_MAX_DISTANCE) {
-  const points = route?.points || [];
-  if (!position || points.length < 2) return position || route?.labelPosition || { x: 0, y: 0 };
-  const closest = closestPointOnPath(position, points);
-  if (closest.distance <= maxDistance) return position;
-  const dx = position.x - closest.x;
-  const dy = position.y - closest.y;
-  const length = Math.hypot(dx, dy);
-  if (length <= 0.0001) return { x: closest.x, y: closest.y };
-  return {
-    x: closest.x + (dx / length) * maxDistance,
-    y: closest.y + (dy / length) * maxDistance,
-  };
-}
-
-function routeLabelPosition(points) {
-  let best = null;
+function routeControlPosition(points) {
+  if (!Array.isArray(points) || points.length === 0) return null;
+  if (points.length === 1) return points[0];
+  const segments = [];
+  let totalLength = 0;
   for (let i = 1; i < points.length; i += 1) {
     const a = points[i - 1];
     const b = points[i];
     const length = Math.hypot(b.x - a.x, b.y - a.y);
-    if (!best || length > best.length) {
-      best = {
-        length,
-        x: (a.x + b.x) / 2,
-        y: (a.y + b.y) / 2,
-      };
-    }
+    if (length <= 0.0001) continue;
+    segments.push({ a, b, length });
+    totalLength += length;
   }
-  return best ? { x: best.x, y: best.y } : points[0] || { x: 0, y: 0 };
+  if (!segments.length) return points[0];
+  let distance = totalLength / 2;
+  for (const segment of segments) {
+    if (distance > segment.length) {
+      distance -= segment.length;
+      continue;
+    }
+    const t = distance / segment.length;
+    return {
+      x: segment.a.x + (segment.b.x - segment.a.x) * t,
+      y: segment.a.y + (segment.b.y - segment.a.y) * t,
+    };
+  }
+  return segments[segments.length - 1].b;
 }
 
 function relationLaneGroupKey(category, bounds) {
@@ -1085,7 +1096,7 @@ function buildGraphGeometry({ rows, actionEpisodes, conversations, timeToX, widt
     const row = speaker === "red_agent" ? rows.redSpeech : rows.blueSpeech;
     const left = timeToX(rangeStart(range));
     const widthPx = widthForRange(range);
-    const top = row.top + (row.height - SPEECH_NODE_H) / 2;
+    const top = row.top + ROW_NODE_TOP_OFFSET;
     const height = SPEECH_NODE_H;
     return {
       left,
@@ -1119,7 +1130,7 @@ function buildGraphGeometry({ rows, actionEpisodes, conversations, timeToX, widt
     const agent = normalizeSpeaker(action.agent);
     const row = agent === "red_agent" ? rows.redAction : rows.blueAction;
     const left = timeToX(rangeStart(range));
-    const top = row.top + (row.height - ACTION_NODE_H) / 2;
+    const top = row.top + ROW_NODE_TOP_OFFSET;
     const widthPx = widthForRange(range);
     layout.set(action.action_episode_id, {
       left,
@@ -1239,13 +1250,8 @@ function routeRelation(rel, src, dst, routeIndex, laneIndex = 0, bounds = null, 
   const isConversationLine =
     rel.relation_type === "conversation_conversation" ||
     rel.relation_type === "speech_speech";
-  const isActionAction = rel.relation_type === "action_action";
-  const color = isActionAction ? "#f59e0b" : isConversationLine ? "#b031d8" : "#1ca21c";
-  const marker = isActionAction
-    ? "url(#arrow-orange)"
-    : isConversationLine
-      ? "url(#arrow-purple)"
-      : "url(#arrow-green)";
+  const color = isConversationLine ? "#b031d8" : "#1ca21c";
+  const marker = isConversationLine ? "url(#arrow-purple)" : "url(#arrow-green)";
 
   if (!relationAllowsStraightPath(rel, src, dst)) {
     const points = gapRoutePoints(rel, src, dst, laneIndex, bounds, rows, canvasHeight, laneCount, anchorOffsets);
@@ -1254,7 +1260,6 @@ function routeRelation(rel, src, dst, routeIndex, laneIndex = 0, bounds = null, 
       marker,
       points,
       path: pathFromPoints(points),
-      labelPosition: routeLabelPosition(points),
     };
   }
 
@@ -1269,7 +1274,6 @@ function routeRelation(rel, src, dst, routeIndex, laneIndex = 0, bounds = null, 
       marker,
       points: cardinal,
       path: pathFromPoints(cardinal),
-      labelPosition: routeLabelPosition(cardinal),
     };
   }
 
@@ -1279,7 +1283,6 @@ function routeRelation(rel, src, dst, routeIndex, laneIndex = 0, bounds = null, 
     marker,
     points,
     path: pathFromPoints(points),
-    labelPosition: routeLabelPosition(points),
   };
 }
 
@@ -1412,21 +1415,20 @@ function StaticSessionPicker({ sessions, selectedId, onSelect }) {
   );
 }
 
-function VideoStage({ videoSrc, duration, currentTime, onSeek, videoRef, onMediaError }) {
+function VideoStage({ videoSrc, duration, currentTime, onSeek, videoRef, onMediaError, onPlayStart }) {
   const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return undefined;
-    const onPlay = () => setPlaying(true);
-    const onPause = () => setPlaying(false);
-    video.addEventListener("play", onPlay);
-    video.addEventListener("pause", onPause);
+    const syncPlaying = () => setPlaying(!video.paused && !video.ended);
+    syncPlaying();
+    const events = ["play", "playing", "pause", "ended", "emptied", "loadedmetadata"];
+    events.forEach((eventName) => video.addEventListener(eventName, syncPlaying));
     return () => {
-      video.removeEventListener("play", onPlay);
-      video.removeEventListener("pause", onPause);
+      events.forEach((eventName) => video.removeEventListener(eventName, syncPlaying));
     };
-  }, [videoRef]);
+  }, [videoRef, videoSrc]);
 
   if (!videoSrc) return null;
 
@@ -1434,7 +1436,12 @@ function VideoStage({ videoSrc, duration, currentTime, onSeek, videoRef, onMedia
     const video = videoRef.current;
     if (!video) return;
     if (video.paused) {
-      await video.play();
+      try {
+        await video.play();
+        onPlayStart?.();
+      } catch {
+        setPlaying(false);
+      }
     } else {
       video.pause();
     }
@@ -1501,7 +1508,7 @@ function FrameStrip({ frames, range, timeToX, mode = "range", onSeek, loading })
   );
 }
 
-function HorizontalScrollbar({ scrollState, scrollRef, variant = "" }) {
+function HorizontalScrollbar({ scrollState, scrollRef, variant = "", onUserScrollStart }) {
   const trackRef = useRef(null);
   const max = Math.max(0, Number(scrollState.max || 0));
   const scrollWidth = Math.max(1, Number(scrollState.scrollWidth || 1));
@@ -1524,6 +1531,7 @@ function HorizontalScrollbar({ scrollState, scrollRef, variant = "" }) {
   const startTrackDrag = (event) => {
     if (safeTagName(event.target) === "BUTTON") return;
     event.preventDefault();
+    onUserScrollStart?.();
     scrollToTrackX(event.clientX, ((trackRef.current?.getBoundingClientRect().width || 0) * thumbWidthPct) / 200);
     const move = (ev) => scrollToTrackX(ev.clientX, ((trackRef.current?.getBoundingClientRect().width || 0) * thumbWidthPct) / 200);
     window.addEventListener("pointermove", move);
@@ -1533,6 +1541,7 @@ function HorizontalScrollbar({ scrollState, scrollRef, variant = "" }) {
   const startThumbDrag = (event) => {
     event.preventDefault();
     event.stopPropagation();
+    onUserScrollStart?.();
     const thumbRect = event.currentTarget.getBoundingClientRect();
     const offset = event.clientX - thumbRect.left;
     const move = (ev) => scrollToTrackX(ev.clientX, offset);
@@ -1562,38 +1571,34 @@ function HorizontalScrollbar({ scrollState, scrollRef, variant = "" }) {
   );
 }
 
-function RelationLayer({ relations, labelSets, layout, rows, canvasHeight, dragLink, onChangeLabel, onDelete, onMoveLabel }) {
+function RelationLayer({ relations, layout, rows, canvasHeight, dragLink, onDelete }) {
+  const [hoveredRelationId, setHoveredRelationId] = useState(null);
+  const [selectedRelationId, setSelectedRelationId] = useState(null);
   const routeById = useMemo(
     () => assignRelationLanes(relations, layout, rows, canvasHeight),
     [relations, layout, rows, canvasHeight]
   );
+  const selectedRelation = relations.find((rel) => rel.relation_id === selectedRelationId);
+  const selectedRoute = selectedRelation ? routeById.get(selectedRelation.relation_id) : null;
+  const selectedButtonPosition = selectedRoute ? routeControlPosition(selectedRoute.points || []) : null;
 
-  const startLabelDrag = (event, relationId, route) => {
-    if (["BUTTON", "SELECT", "OPTION"].includes(safeTagName(event.target))) return;
-    event.preventDefault();
-    event.stopPropagation();
-    const canvas = event.currentTarget.closest(".dependency-canvas");
-    const rect = canvas?.getBoundingClientRect();
-    if (!rect) return;
-    const move = (ev) => {
-      onMoveLabel(
-        relationId,
-        constrainLabelPositionToRoute(
-          {
-            x: ev.clientX - rect.left,
-            y: ev.clientY - rect.top,
-          },
-          route
-        )
-      );
+  useEffect(() => {
+    const clearSelection = (event) => {
+      const target = event.target;
+      if (target instanceof Element && target.closest(".relation-hit-path, .relation-delete-button")) {
+        return;
+      }
+      setSelectedRelationId(null);
     };
-    window.addEventListener("pointermove", move);
-    window.addEventListener(
-      "pointerup",
-      () => window.removeEventListener("pointermove", move),
-      { once: true }
-    );
-  };
+    window.addEventListener("pointerdown", clearSelection, true);
+    return () => window.removeEventListener("pointerdown", clearSelection, true);
+  }, []);
+
+  useEffect(() => {
+    if (selectedRelationId && !relations.some((rel) => rel.relation_id === selectedRelationId)) {
+      setSelectedRelationId(null);
+    }
+  }, [relations, selectedRelationId]);
 
   return h(
     Fragment,
@@ -1614,15 +1619,6 @@ function RelationLayer({ relations, labelSets, layout, rows, canvasHeight, dragL
           markerUnits: "userSpaceOnUse",
         }, h("path", { d: "M0,0 L0,14 L19,7 z", fill: "#1ca21c" })),
         h("marker", {
-          id: "arrow-orange",
-          markerWidth: "20",
-          markerHeight: "20",
-          refX: "18",
-          refY: "7",
-          orient: "auto",
-          markerUnits: "userSpaceOnUse",
-        }, h("path", { d: "M0,0 L0,14 L19,7 z", fill: "#f59e0b" })),
-        h("marker", {
           id: "arrow-purple",
           markerWidth: "20",
           markerHeight: "20",
@@ -1638,16 +1634,52 @@ function RelationLayer({ relations, labelSets, layout, rows, canvasHeight, dragL
         if (!src || !dst) return null;
         const route = routeById.get(rel.relation_id);
         if (!route) return null;
-        return h("path", {
-          key: rel.relation_id,
-          d: route.path,
-          fill: "none",
-          stroke: route.color,
-          strokeWidth: RELATION_STROKE_W,
-          strokeLinejoin: "round",
-          strokeLinecap: "round",
-          markerEnd: route.marker,
-        });
+        const highlighted = rel.relation_id === hoveredRelationId;
+        return h(
+          Fragment,
+          { key: rel.relation_id },
+          h("path", {
+            className: `relation-outline ${highlighted ? "is-visible" : ""}`,
+            d: route.path,
+            fill: "none",
+            strokeWidth: RELATION_STROKE_W + 4,
+            strokeLinejoin: "round",
+            strokeLinecap: "round",
+          }),
+          h("path", {
+            className: "relation-path",
+            d: route.path,
+            fill: "none",
+            stroke: route.color,
+            strokeWidth: RELATION_STROKE_W,
+            strokeLinejoin: "round",
+            strokeLinecap: "round",
+            markerEnd: route.marker,
+          }),
+          h("path", {
+            className: "relation-hit-path",
+            d: route.path,
+            fill: "none",
+            stroke: "transparent",
+            strokeWidth: 18,
+            strokeLinejoin: "round",
+            strokeLinecap: "round",
+            onPointerEnter: () => setHoveredRelationId(rel.relation_id),
+            onPointerLeave: () =>
+              setHoveredRelationId((current) =>
+                current === rel.relation_id ? null : current
+              ),
+            onPointerDown: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setSelectedRelationId(rel.relation_id);
+            },
+            onClick: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            },
+          })
+        );
       }),
       dragLink &&
         (() => {
@@ -1666,68 +1698,31 @@ function RelationLayer({ relations, labelSets, layout, rows, canvasHeight, dragL
           });
         })()
     ),
-    relations.map((rel) => {
-      const src = layout.get(rel.source_id);
-      const dst = layout.get(rel.target_id);
-      if (!src || !dst) return null;
-      const route = routeById.get(rel.relation_id);
-      if (!route) return null;
-      const labelPos = constrainLabelPositionToRoute(rel.label_position || route.labelPosition, route);
-      const options = labelSets[rel.relation_type] || DEFAULT_RELATION_LABEL_SETS[rel.relation_type] || ["unclear"];
-      const labelValue = String(rel.label || options[0] || "").trim();
-      const visibleOptions =
-        labelValue && !options.includes(labelValue)
-          ? [
-              ...options.filter((option) => option !== "others"),
-              labelValue,
-              ...options.filter((option) => option === "others"),
-            ]
-          : options;
-      return h(
-        "div",
+    selectedRelation &&
+      selectedButtonPosition &&
+      h(
+        "button",
         {
-          key: `${rel.relation_id}_label`,
-          className: "relation-label",
+          type: "button",
+          className: "relation-delete-button",
+          title: "Delete relation",
           style: {
-            left: `${labelPos.x}px`,
-            top: `${labelPos.y}px`,
+            left: `${selectedButtonPosition.x}px`,
+            top: `${selectedButtonPosition.y}px`,
+          },
+          onPointerDown: (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          },
+          onClick: (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setSelectedRelationId(null);
+            onDelete(selectedRelation.relation_id);
           },
         },
-        h("span", {
-          className: "relation-drag-handle",
-          title: "Move label",
-          onPointerDown: (e) => startLabelDrag(e, rel.relation_id, route),
-        }, "::"),
-        h(
-          "select",
-          {
-            value: labelValue,
-            onChange: (e) => {
-              const nextLabel = e.target.value;
-              if (nextLabel !== "others") {
-                onChangeLabel(rel.relation_id, nextLabel);
-                return;
-              }
-              const currentCustom = options.includes(labelValue) ? "" : labelValue;
-              const customLabel = window.prompt("Enter the label of the relation", currentCustom);
-              const normalizedLabel = String(customLabel || "").trim();
-              if (normalizedLabel) {
-                onChangeLabel(rel.relation_id, normalizedLabel);
-              } else {
-                e.target.value = labelValue;
-              }
-            },
-            onPointerDown: (e) => e.stopPropagation(),
-          },
-          visibleOptions.map((option) => h("option", { key: option, value: option }, option))
-        ),
-        h("button", {
-          type: "button",
-          onPointerDown: (e) => e.stopPropagation(),
-          onClick: () => onDelete(rel.relation_id),
-        }, "x")
-      );
-    })
+        "Delete"
+      )
   );
 }
 
@@ -1803,8 +1798,10 @@ function BlurTextArea({ value, onCommit, ...props }) {
 function EditPanel({
   editor,
   action,
+  relation,
   conversation,
   speech,
+  speechFunctionOptions = [],
   speechIndex,
   conversationIndex,
   onClose,
@@ -1823,6 +1820,7 @@ function EditPanel({
   onMergeConversation,
   onAddAction,
   onAddSpeech,
+  onDeleteRelation,
   currentTime,
 }) {
   const addPanel = h(
@@ -1840,6 +1838,26 @@ function EditPanel({
   );
 
   if (!editor) return addPanel;
+
+  if (editor.type === "relation" && relation) {
+    return h(
+      "section",
+      { className: "dependency-edit-panel" },
+      h("div", { className: "dependency-edit-header" }, h("strong", null, "Edit relation"), h("button", { type: "button", onClick: onClose }, "Close")),
+      h(
+        "div",
+        { className: "relation-edit-summary" },
+        h("span", null, `${relation.source_type}: ${relation.source_id}`),
+        h("span", null, "->"),
+        h("span", null, `${relation.target_type}: ${relation.target_id}`)
+      ),
+      h(
+        "div",
+        { className: "dependency-edit-actions" },
+        h("button", { type: "button", className: "btn-danger", onClick: () => onDeleteRelation(relation.relation_id) }, "Delete relation")
+      )
+    );
+  }
 
   if (editor.type === "action" && action) {
     const range = action.time_range || [0, 0];
@@ -1897,13 +1915,20 @@ function EditPanel({
 
   if (editor.type === "speech" && speech && conversation) {
     const range = speech.time_range || [0, 0];
+    const speechFunctionRaw = String(speech.communication_function || "").trim();
+    const speechFunctionValue =
+      speechFunctionRaw || "share_information";
+    const isCustomFunction =
+      !speechFunctionOptions.includes(speechFunctionRaw) || speechFunctionRaw === "other";
+    const speechFunctionSelectValue = isCustomFunction ? "other" : speechFunctionValue;
+    const customFunctionValue = speechFunctionRaw === "other" ? "" : speechFunctionRaw;
     return h(
       "section",
       { className: "dependency-edit-panel" },
       h("div", { className: "dependency-edit-header" }, h("strong", null, "Edit speech"), h("button", { type: "button", onClick: onClose }, "Close")),
       h(
         "div",
-        { className: "edit-grid" },
+        { className: "edit-grid speech-primary-grid" },
         h(
           "label",
           null,
@@ -1916,22 +1941,6 @@ function EditPanel({
             },
             h("option", { value: "red_agent" }, "red_agent"),
             h("option", { value: "blue_agent" }, "blue_agent")
-          )
-        ),
-        h(
-          "label",
-          null,
-          "Role",
-          h(
-            "select",
-            {
-              value: speech.conversation_role || "initiating_conversation",
-              onChange: (e) =>
-                onSpeechPatch(conversation.conversation_id, speech.speech_id, {
-                  conversation_role: e.target.value,
-                }),
-            },
-            CONVERSATION_ROLE_OPTIONS.map((value) => h("option", { key: value, value }, value))
           )
         ),
         h(
@@ -1960,8 +1969,60 @@ function EditPanel({
         )
       ),
       h(
+        "div",
+        { className: "edit-grid speech-secondary-grid" },
+        h(
+          "label",
+          null,
+          "Role",
+          h(
+            "select",
+            {
+              value: speech.conversation_role || "initiating_conversation",
+              onChange: (e) =>
+                onSpeechPatch(conversation.conversation_id, speech.speech_id, {
+                  conversation_role: e.target.value,
+                }),
+            },
+            CONVERSATION_ROLE_OPTIONS.map((value) => h("option", { key: value, value }, value))
+          )
+        ),
+        h(
+          "label",
+          null,
+          "Function",
+            h(
+              "select",
+              {
+                value: speechFunctionSelectValue,
+                onChange: (e) =>
+                  onSpeechPatch(conversation.conversation_id, speech.speech_id, {
+                  communication_function: e.target.value,
+                }),
+            },
+            speechFunctionOptions.map((value) => h("option", { key: value, value }, value))
+          )
+        )
+      ),
+      isCustomFunction
+        ? h(
+            "label",
+            { className: "speech-text-label" },
+            "Custom Function",
+            h("input", {
+              type: "text",
+              value: customFunctionValue,
+              placeholder: "Type custom communication function",
+              onChange: (e) =>
+                onSpeechPatch(conversation.conversation_id, speech.speech_id, {
+                  communication_function: e.target.value.trim(),
+                }),
+            })
+          )
+        : null,
+      h(
         "label",
-        null,
+        { className: "speech-text-label" },
         "Text",
         h(BlurTextArea, {
           value: speech.text || "",
@@ -2030,7 +2091,6 @@ function DependencyGraph({
   manifest,
   actionEpisodes,
   relations,
-  labelSets,
   videoSrc,
   videoRef,
   currentTime,
@@ -2047,6 +2107,12 @@ function DependencyGraph({
   const [dragLink, setDragLink] = useState(null);
   const [scrollState, setScrollState] = useState({ left: 0, max: 0, scrollWidth: 0, clientWidth: 0 });
   const [editor, setEditor] = useState(null);
+  const autoFollowEnabledRef = useRef(true);
+  const autoFollowCatchUpRef = useRef(false);
+  const autoFollowRafRef = useRef(null);
+  const autoFollowLastTsRef = useRef(null);
+  const dragLinkRef = useRef(null);
+  const programmaticScrollUntilRef = useRef(0);
   const conversations = useMemo(() => conversationsFromManifest(manifest), [manifest]);
   const duration = useMemo(
     () => manifestDuration(manifest, conversations, actionEpisodes),
@@ -2110,6 +2176,111 @@ function DependencyGraph({
     });
   }, []);
 
+  const setProgrammaticScrollLeft = useCallback(
+    (el, scrollLeft) => {
+      programmaticScrollUntilRef.current = performance.now() + 120;
+      el.scrollLeft = scrollLeft;
+      updateScrollState();
+    },
+    [updateScrollState]
+  );
+
+  const runAutoFollowFrame = useCallback(
+    (timestamp) => {
+      autoFollowRafRef.current = null;
+      const el = scrollRef.current;
+      const video = videoRef.current;
+      const isPlaying = Boolean(video && !video.paused && !video.ended);
+      if (!autoFollowEnabledRef.current || dragLinkRef.current || !el || (!isPlaying && !autoFollowCatchUpRef.current)) {
+        autoFollowLastTsRef.current = null;
+        return;
+      }
+
+      const maxScrollLeft = Math.max(0, el.scrollWidth - el.clientWidth);
+      const rawVideoTime = video ? Number(video.currentTime) : Number.NaN;
+      const followTime = Number.isFinite(rawVideoTime) ? rawVideoTime : Number(currentTime || 0);
+      const playheadCanvasX = timeToX(followTime);
+      const followAnchorX = el.clientWidth * PLAYHEAD_SCROLL_ANCHOR;
+      const playheadViewportX = playheadCanvasX - el.scrollLeft;
+      const target = clamp(
+        playheadCanvasX - followAnchorX,
+        0,
+        maxScrollLeft
+      );
+      const previousTs = autoFollowLastTsRef.current ?? timestamp - 1000 / 60;
+      const dt = clamp((timestamp - previousTs) / 1000, 1 / 120, 0.12);
+      autoFollowLastTsRef.current = timestamp;
+
+      const delta = target - el.scrollLeft;
+      if (delta < 0 && playheadViewportX < followAnchorX) {
+        autoFollowCatchUpRef.current = false;
+      } else if (Math.abs(delta) <= AUTO_SCROLL_SETTLE_PX) {
+        setProgrammaticScrollLeft(el, target);
+        autoFollowCatchUpRef.current = false;
+      } else {
+        const playbackRate = Math.max(0.1, Math.abs(Number(video?.playbackRate || 1)));
+        const catchUpMultiplier =
+          delta > 0 && playheadViewportX > followAnchorX
+            ? 3
+            : AUTO_SCROLL_CATCH_UP_MULTIPLIER;
+        const maxStep = PX_PER_SECOND * playbackRate * catchUpMultiplier * dt;
+        setProgrammaticScrollLeft(el, el.scrollLeft + clamp(delta, -maxStep, maxStep));
+      }
+
+      if (autoFollowEnabledRef.current && !dragLinkRef.current && (isPlaying || autoFollowCatchUpRef.current)) {
+        autoFollowRafRef.current = requestAnimationFrame(runAutoFollowFrame);
+      } else {
+        autoFollowLastTsRef.current = null;
+      }
+    },
+    [currentTime, setProgrammaticScrollLeft, timeToX, videoRef]
+  );
+
+  const startAutoFollowLoop = useCallback(() => {
+    if (autoFollowRafRef.current == null) {
+      autoFollowRafRef.current = requestAnimationFrame(runAutoFollowFrame);
+    }
+  }, [runAutoFollowFrame]);
+
+  const restoreAutoFollow = useCallback(() => {
+    autoFollowEnabledRef.current = true;
+    autoFollowCatchUpRef.current = true;
+    autoFollowLastTsRef.current = null;
+    startAutoFollowLoop();
+  }, [startAutoFollowLoop]);
+
+  const pauseAutoFollow = useCallback(() => {
+    autoFollowEnabledRef.current = false;
+    autoFollowCatchUpRef.current = false;
+    autoFollowLastTsRef.current = null;
+    if (autoFollowRafRef.current != null) {
+      cancelAnimationFrame(autoFollowRafRef.current);
+      autoFollowRafRef.current = null;
+    }
+  }, []);
+
+  const handleScroll = useCallback(() => {
+    updateScrollState();
+    if (performance.now() > programmaticScrollUntilRef.current) {
+      pauseAutoFollow();
+    }
+  }, [pauseAutoFollow, updateScrollState]);
+
+  useEffect(() => {
+    if (autoFollowEnabledRef.current) {
+      startAutoFollowLoop();
+    }
+  }, [currentTime, startAutoFollowLoop]);
+
+  useEffect(
+    () => () => {
+      if (autoFollowRafRef.current != null) {
+        cancelAnimationFrame(autoFollowRafRef.current);
+      }
+    },
+    []
+  );
+
   useEffect(() => {
     updateScrollState();
     const raf = requestAnimationFrame(updateScrollState);
@@ -2120,15 +2291,23 @@ function DependencyGraph({
     };
   }, [actionEpisodes.length, conversations.length, duration, updateScrollState, width]);
 
+  const seekWithAutoFollow = useCallback(
+    (time, updateVideo = true) => {
+      restoreAutoFollow();
+      onSeek(time, updateVideo);
+    },
+    [onSeek, restoreAutoFollow]
+  );
+
   const scrubToClientX = useCallback(
     (clientX) => {
       const rect = canvasRef.current?.getBoundingClientRect();
       if (!rect) return;
       const x = clientX - rect.left;
       const t = (x - LABEL_W - GRAPH_PAD) / PX_PER_SECOND;
-      onSeek(Math.max(0, Math.min(duration, t)), true);
+      seekWithAutoFollow(Math.max(0, Math.min(duration, t)), true);
     },
-    [duration, onSeek]
+    [duration, seekWithAutoFollow]
   );
 
   const startTimelineScrub = useCallback(
@@ -2151,6 +2330,10 @@ function DependencyGraph({
   const selectedAction =
     editor?.type === "action"
       ? actionEpisodes.find((item) => item.action_episode_id === editor.id)
+      : null;
+  const selectedRelation =
+    editor?.type === "relation"
+      ? relations.find((item) => item.relation_id === editor.id)
       : null;
   let selectedConversation = null;
   let selectedConversationIndex = -1;
@@ -2192,6 +2375,10 @@ function DependencyGraph({
   const selectedActionCanMergeNext = selectedAction
     ? Boolean(actionNeighborId(selectedAction.action_episode_id, "next"))
     : false;
+  const speechFunctionOptions = useMemo(
+    () => collectSpeechFunctionOptions(conversations, selectedSpeech?.communication_function),
+    [conversations, selectedSpeech?.communication_function]
+  );
 
   const newRangeAtPlayhead = (lengthS) => {
     const start = Math.max(0, Number(currentTime || 0));
@@ -2220,6 +2407,7 @@ function DependencyGraph({
       text: "",
       time_range: range,
       conversation_role: "initiating_conversation",
+      communication_category: "knowledge share",
       communication_function: "share_information",
     };
     let inserted = false;
@@ -2552,9 +2740,10 @@ function DependencyGraph({
   const addRelation = useCallback(
     (source, target) => {
       if (!source || !target || source.id === target.id) return;
+      if (source.type === "action" && target.type === "action") return;
       if (source.type === "conversation" && target.type === "conversation") return;
       const relType = relationType(source.type, target.type);
-      const options = labelSets[relType] || DEFAULT_RELATION_LABEL_SETS[relType] || ["unclear"];
+      if (!relType) return;
       const exists = relations.some(
         (rel) =>
           rel.source_id === source.id &&
@@ -2572,12 +2761,20 @@ function DependencyGraph({
           target_id: target.id,
           target_type: target.type,
           relation_type: relType,
-          label: options[0] || "unclear",
         },
       ]);
     },
-    [labelSets, onRelationsChange, relations]
+    [onRelationsChange, relations]
   );
+
+  const deleteRelation = (relationId) => {
+    onRelationsChange(relations.filter((rel) => rel.relation_id !== relationId));
+    setEditor(null);
+  };
+
+  useEffect(() => {
+    dragLinkRef.current = dragLink;
+  }, [dragLink]);
 
   useEffect(() => {
     if (!dragLink) return undefined;
@@ -2618,6 +2815,7 @@ function DependencyGraph({
     const rect = canvasRef.current?.getBoundingClientRect();
     if (!sourceRect || !rect) return;
     e.preventDefault();
+    pauseAutoFollow();
     setDragLink({
       sourceId: id,
       sourceType: type,
@@ -2630,8 +2828,10 @@ function DependencyGraph({
   const editPanel = h(EditPanel, {
     editor,
     action: selectedAction,
+    relation: selectedRelation,
     conversation: selectedConversation,
     speech: selectedSpeech,
+    speechFunctionOptions,
     speechIndex: selectedSpeechIndex,
     conversationIndex: selectedConversationIndex,
     onClose: () => setEditor(null),
@@ -2650,6 +2850,7 @@ function DependencyGraph({
     onMergeConversation: mergeConversation,
     onAddAction: addAction,
     onAddSpeech: addSpeech,
+    onDeleteRelation: deleteRelation,
     currentTime,
   });
 
@@ -2671,6 +2872,7 @@ function DependencyGraph({
         onSeek,
         videoRef,
         onMediaError,
+        onPlayStart: restoreAutoFollow,
       }),
       h("div", { className: "dependency-edit-slot" }, editPanel)
     ),
@@ -2678,14 +2880,16 @@ function DependencyGraph({
       scrollState,
       scrollRef,
       variant: "timeline-scrollbar-top",
+      onUserScrollStart: pauseAutoFollow,
     }),
     h(
       "div",
       {
         className: "dependency-scroll",
         ref: scrollRef,
-        onScroll: updateScrollState,
+        onScroll: handleScroll,
         onWheel: (e) => {
+          pauseAutoFollow();
           const el = scrollRef.current;
           if (!el || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
           el.scrollLeft += e.deltaY;
@@ -2732,7 +2936,7 @@ function DependencyGraph({
                   left: `${timeToX(tick)}px`,
                   height: `${rows.timeline.height}px`,
                 },
-                onClick: () => onSeek(tick, true),
+                onClick: () => seekWithAutoFollow(tick, true),
               },
               h("span", null, fmtTime(tick))
             )
@@ -2753,7 +2957,7 @@ function DependencyGraph({
             range: [0, duration],
             timeToX,
             mode: "timeline",
-            onSeek,
+            onSeek: seekWithAutoFollow,
             loading: framesLoading,
           })
         ),
@@ -2765,21 +2969,11 @@ function DependencyGraph({
         }),
         h(RelationLayer, {
           relations,
-          labelSets,
           layout,
           rows,
           canvasHeight,
           dragLink,
-          onChangeLabel: (relationId, label) =>
-            onRelationsChange(relations.map((rel) => (rel.relation_id === relationId ? { ...rel, label } : rel))),
-          onMoveLabel: (relationId, labelPosition) =>
-            onRelationsChange(
-              relations.map((rel) =>
-                rel.relation_id === relationId ? { ...rel, label_position: labelPosition } : rel
-              )
-            ),
-          onDelete: (relationId) =>
-            onRelationsChange(relations.filter((rel) => rel.relation_id !== relationId)),
+          onDelete: deleteRelation,
         }),
         actionEpisodes.map((action, idx) => {
           const range = action.time_range || [0, 0];
@@ -2794,7 +2988,7 @@ function DependencyGraph({
               "data-node-type": "action",
               style: {
                 left: `${timeToX(rangeStart(range))}px`,
-                top: `${row.top + (row.height - ACTION_NODE_H) / 2}px`,
+                top: `${row.top + ROW_NODE_TOP_OFFSET}px`,
                 width: `${widthForRange(range)}px`,
                 minHeight: `${ACTION_NODE_H}px`,
               },
@@ -2873,10 +3067,6 @@ function DependencyGraph({
         )
       )
     ),
-    h(HorizontalScrollbar, {
-      scrollState,
-      scrollRef,
-    })
   );
 }
 
@@ -2892,7 +3082,6 @@ function App() {
   const [manifest, setManifest] = useState(null);
   const [actionEpisodes, setActionEpisodes] = useState([]);
   const [relations, setRelations] = useState([]);
-  const [labelSets, setLabelSets] = useState(DEFAULT_RELATION_LABEL_SETS);
   const [currentTime, setCurrentTime] = useState(0);
   const [dirtyVersion, setDirtyVersion] = useState(0);
   const [staticSessions, setStaticSessions] = useState([]);
@@ -2974,8 +3163,7 @@ function App() {
     setManifest(nextManifest);
     setManifestPath(labeledManifestPath);
     setActionEpisodes(graphData.action_episodes || nextManifest.action_episodes || []);
-    setRelations(graphData.dependency_relations || nextManifest.dependency_relations || []);
-    setLabelSets(graphData.relation_label_sets || nextManifest.metadata?.dependency_relation_label_sets || DEFAULT_RELATION_LABEL_SETS);
+    setRelations(filterAllowedRelations(graphData.dependency_relations || nextManifest.dependency_relations || []));
     dirtyVersionRef.current = 0;
     lastSavedDirtyVersionRef.current = 0;
     setDirtyVersion(0);
@@ -2987,8 +3175,7 @@ function App() {
     setManifest(nextManifest);
     if (nextManifestPath) setManifestPath(nextManifestPath);
     setActionEpisodes(nextManifest.action_episodes || []);
-    setRelations(nextManifest.dependency_relations || []);
-    setLabelSets(nextManifest.metadata?.dependency_relation_label_sets || DEFAULT_RELATION_LABEL_SETS);
+    setRelations(filterAllowedRelations(nextManifest.dependency_relations || []));
     dirtyVersionRef.current = 0;
     lastSavedDirtyVersionRef.current = 0;
     setDirtyVersion(0);
@@ -3158,17 +3345,20 @@ function App() {
     }
     if (IS_STATIC_MODE) {
       const currentConversations = conversationsFromManifest(manifest);
+      const allowedRelations = filterAllowedRelations(relations);
+      const metadata = {
+        ...((manifest && manifest.metadata) || {}),
+      };
+      delete metadata.dependency_relation_label_sets;
       const nextManifest = {
         ...(manifest || {}),
         conversations: currentConversations,
         action_episodes: actionEpisodes,
-        dependency_relations: relations,
-        metadata: {
-          ...((manifest && manifest.metadata) || {}),
-          dependency_relation_label_sets: labelSets,
-        },
+        dependency_relations: allowedRelations,
+        metadata,
       };
       setManifest(nextManifest);
+      setRelations(allowedRelations);
       const stem = selectedStaticSession?.id || canonicalSessionStem(manifestPath) || "session";
       downloadJson(`${stem}_labeled.json`, nextManifest);
       lastSavedDirtyVersionRef.current = dirtyVersionRef.current;
@@ -3186,6 +3376,7 @@ function App() {
     setSaveStatus(isAuto ? "auto-saving" : "saving");
     setError("");
     const currentConversations = conversationsFromManifest(manifest);
+    const allowedRelations = filterAllowedRelations(relations);
     try {
       const resp = await fetch("/api/dependency/save", {
         method: "POST",
@@ -3193,7 +3384,7 @@ function App() {
         body: JSON.stringify({
           manifest_path: manifestPath,
           action_episodes: actionEpisodes,
-          dependency_relations: relations,
+          dependency_relations: allowedRelations,
           conversations: currentConversations,
         }),
       });
@@ -3207,8 +3398,7 @@ function App() {
       if (dirtyVersionRef.current === versionAtStart) {
         setManifestPath(data.manifest_path || manifestPath);
         setActionEpisodes(data.action_episodes || actionEpisodes);
-        setRelations(data.dependency_relations || relations);
-        setLabelSets(data.relation_label_sets || labelSets);
+        setRelations(filterAllowedRelations(data.dependency_relations || allowedRelations));
         setSaveStatus("saved");
       } else {
         setSaveStatus("unsaved");
@@ -3227,7 +3417,7 @@ function App() {
         }, 1200);
       }
     }
-  }, [actionEpisodes, labelSets, manifest, manifestPath, relations, selectedStaticSession]);
+  }, [actionEpisodes, manifest, manifestPath, relations, selectedStaticSession]);
 
   useEffect(() => {
     if (IS_STATIC_MODE || !manifestPath || dirtyVersion === 0 || dirtyVersion === lastSavedDirtyVersionRef.current) {
@@ -3290,7 +3480,6 @@ function App() {
           manifest,
           actionEpisodes,
           relations,
-          labelSets,
           videoSrc: videoUrl,
           videoRef,
           videoFrames,
@@ -3304,7 +3493,7 @@ function App() {
           },
           onConversationsChange: updateConversations,
           onRelationsChange: (nextRelations) => {
-            setRelations(nextRelations);
+            setRelations(filterAllowedRelations(nextRelations));
             markDirty();
           },
         })

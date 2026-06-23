@@ -12,37 +12,6 @@
     },
     "response_merge_window_s": 3.0,
     "default_action_window_tail_s": 5.0,
-    "dependency_relation_label_sets": {
-      "action_action": [
-        "trigger",
-        "follow",
-        "others"
-      ],
-      "action_conversation": [
-        "trigger",
-        "follow",
-        "others"
-      ],
-      "action_speech": [
-        "trigger",
-        "follow",
-        "others"
-      ],
-      "speech_speech": [
-        "revise_plan",
-        "confirm",
-        "refuse",
-        "others"
-      ],
-      "conversation_conversation": [
-        "response",
-        "confirm",
-        "answer",
-        "clarify",
-        "revise_plan",
-        "unclear"
-      ]
-    },
     "action_episodes_source": "auto_default_v2"
   },
   "paragraphs": [

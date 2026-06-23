@@ -13,37 +13,6 @@
     "asr_model": "whisper-large-v3",
     "response_merge_window_s": 3.0,
     "default_action_window_tail_s": 5.0,
-    "dependency_relation_label_sets": {
-      "action_action": [
-        "trigger",
-        "follow",
-        "others"
-      ],
-      "action_conversation": [
-        "trigger",
-        "follow",
-        "others"
-      ],
-      "action_speech": [
-        "trigger",
-        "follow",
-        "others"
-      ],
-      "speech_speech": [
-        "revise_plan",
-        "confirm",
-        "refuse",
-        "others"
-      ],
-      "conversation_conversation": [
-        "response",
-        "confirm",
-        "answer",
-        "clarify",
-        "revise_plan",
-        "unclear"
-      ]
-    },
     "action_episodes_source": "manual"
   },
   "conversations": [
@@ -572,8 +541,7 @@
       "source_type": "conversation",
       "target_id": "blue_agent_action_episode_001",
       "target_type": "action",
-      "relation_type": "action_conversation",
-      "label": "follow"
+      "relation_type": "action_conversation"
     },
     {
       "relation_id": "dep_rel_1780523826680_2",
@@ -581,8 +549,7 @@
       "source_type": "conversation",
       "target_id": "red_agent_action_episode_001",
       "target_type": "action",
-      "relation_type": "action_conversation",
-      "label": "follow"
+      "relation_type": "action_conversation"
     },
     {
       "relation_id": "dep_rel_1780523839512_3",
@@ -590,8 +557,7 @@
       "source_type": "conversation",
       "target_id": "red_agent_action_episode_002",
       "target_type": "action",
-      "relation_type": "action_conversation",
-      "label": "follow"
+      "relation_type": "action_conversation"
     },
     {
       "relation_id": "dep_rel_1780523842499_4",
@@ -599,8 +565,7 @@
       "source_type": "conversation",
       "target_id": "blue_agent_action_episode_002",
       "target_type": "action",
-      "relation_type": "action_conversation",
-      "label": "follow"
+      "relation_type": "action_conversation"
     },
     {
       "relation_id": "dep_rel_1780523970332_5",
@@ -608,8 +573,7 @@
       "source_type": "action",
       "target_id": "conv_002",
       "target_type": "conversation",
-      "relation_type": "action_conversation",
-      "label": "trigger"
+      "relation_type": "action_conversation"
     },
     {
       "relation_id": "dep_rel_1780523971470_6",
@@ -617,12 +581,7 @@
       "source_type": "conversation",
       "target_id": "red_agent_action_episode_006",
       "target_type": "action",
-      "relation_type": "action_conversation",
-      "label": "follow",
-      "label_position": {
-        "x": 2179.5,
-        "y": 273.0
-      }
+      "relation_type": "action_conversation"
     },
     {
       "relation_id": "dep_rel_1780523979082_7",
@@ -630,8 +589,7 @@
       "source_type": "conversation",
       "target_id": "blue_agent_action_episode_005",
       "target_type": "action",
-      "relation_type": "action_conversation",
-      "label": "follow"
+      "relation_type": "action_conversation"
     },
     {
       "relation_id": "dep_rel_1780523982141_8",
@@ -639,8 +597,7 @@
       "source_type": "conversation",
       "target_id": "blue_agent_action_episode_005",
       "target_type": "action",
-      "relation_type": "action_conversation",
-      "label": "follow"
+      "relation_type": "action_conversation"
     },
     {
       "relation_id": "dep_rel_1780524008626_9",
@@ -648,12 +605,7 @@
       "source_type": "conversation",
       "target_id": "red_agent_action_episode_007",
       "target_type": "action",
-      "relation_type": "action_conversation",
-      "label": "follow",
-      "label_position": {
-        "x": 2418.5,
-        "y": 323.0
-      }
+      "relation_type": "action_conversation"
     },
     {
       "relation_id": "dep_rel_1780524016818_10",
@@ -661,8 +613,7 @@
       "source_type": "conversation",
       "target_id": "red_agent_action_episode_005",
       "target_type": "action",
-      "relation_type": "action_conversation",
-      "label": "follow"
+      "relation_type": "action_conversation"
     },
     {
       "relation_id": "dep_rel_1780524046642_11",
@@ -670,8 +621,7 @@
       "source_type": "conversation",
       "target_id": "blue_agent_action_episode_005",
       "target_type": "action",
-      "relation_type": "action_conversation",
-      "label": "follow"
+      "relation_type": "action_conversation"
     },
     {
       "relation_id": "dep_rel_1780524049068_12",
@@ -679,8 +629,7 @@
       "source_type": "conversation",
       "target_id": "red_agent_action_episode_007",
       "target_type": "action",
-      "relation_type": "action_conversation",
-      "label": "follow"
+      "relation_type": "action_conversation"
     }
   ]
 }

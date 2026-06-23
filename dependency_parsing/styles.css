@@ -310,54 +310,55 @@
 .relation-svg {
   position: absolute;
   inset: 0;
-  z-index: 3;
+  z-index: 7;
   pointer-events: none;
   overflow: visible;
 }
 
-.relation-label {
+.relation-outline,
+.relation-path {
+  z-index: 7;
+  pointer-events: none;
+}
+
+.relation-outline {
+  stroke: var(--accent);
+  opacity: 0;
+  transition: opacity 90ms ease;
+}
+
+.relation-outline.is-visible {
+  opacity: 1;
+}
+
+.relation-hit-path {
+  pointer-events: stroke;
+  cursor: pointer;
+}
+
+.relation-delete-button {
   position: absolute;
+  z-index: 13;
   transform: translate(-50%, -50%);
-  z-index: 8;
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  padding: 3px;
-  border-radius: 6px;
-  background: rgba(15, 19, 32, 0.92);
-  border: 1px solid var(--border);
-  cursor: default;
-}
-
-.relation-label select {
-  max-width: 128px;
-  font-size: 1rem;
-}
-
-.relation-drag-handle {
-  width: 18px;
+  width: auto;
   height: 22px;
+  min-width: 0;
+  padding: 0 8px;
   display: grid;
   place-items: center;
+  border-color: #d77272;
+  background: #592424;
+  color: #ffdede;
   border-radius: 4px;
-  color: var(--muted);
-  cursor: move;
-  font-weight: 700;
-  letter-spacing: 0;
-  user-select: none;
-}
-
-.relation-drag-handle:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text);
-}
-
-.relation-label button {
-  width: 22px;
-  height: 22px;
-  padding: 0;
-  border-radius: 4px;
+  font-size: 1rem;
   line-height: 1;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+}
+
+.relation-delete-button:hover {
+  border-color: #ff9a9a;
+  background: #733030;
 }
 
 .graph-node {
@@ -378,6 +379,7 @@
 }
 
 .action-node {
+  z-index: 8;
   min-height: 70px;
   display: grid;
   grid-template-rows: 1fr auto;
@@ -435,19 +437,19 @@
 
 .conversation-node-title {
   position: absolute;
-  left: 8px;
-  top: 6px;
+  left: -5px;
+  top: -30px;
   padding: 2px 6px;
-  border-radius: 4px;
-  background: #fff;
-  color: #000;
+  color: #fff;
   font-size: 1rem;
   font-weight: 700;
+  z-index: 2;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
 }
 
 .speech-box {
   position: absolute;
-  z-index: 7;
+  z-index: 9;
   min-height: 62px;
   border: 1px solid;
   border-radius: 4px;
@@ -609,6 +611,52 @@
   resize: vertical;
 }
 
+.speech-primary-grid,
+.speech-secondary-grid {
+  display: grid;
+  grid-template-columns: minmax(150px, 200px) repeat(2, minmax(110px, 140px));
+  align-items: end;
+  width: min(520px, 100%);
+}
+
+.speech-secondary-grid {
+  grid-template-columns: minmax(220px, 280px) minmax(180px, 240px);
+}
+
+.speech-primary-grid label,
+.speech-secondary-grid label {
+  min-width: 0;
+}
+
+.speech-primary-grid input,
+.speech-primary-grid select,
+.speech-secondary-grid select {
+  width: 100%;
+  min-width: 0;
+}
+
+.speech-text-label {
+  width: min(720px, 100%);
+}
+
+.speech-text-label textarea {
+  width: 100%;
+}
+
+.speech-text-label input[type="text"] {
+  width: 100%;
+}
+
+.relation-edit-summary {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
 .add-episode-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(180px, 1fr));
@@ -633,6 +681,10 @@
   }
   .session-select {
     min-width: 100%;
+  }
+  .speech-primary-grid,
+  .speech-secondary-grid {
+    grid-template-columns: 1fr;
   }
   .add-episode-grid {
     grid-template-columns: 1fr;
